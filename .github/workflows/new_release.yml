@@ -34,6 +34,7 @@ jobs:
         run: |
           df -ah $GITHUB_WORKSPACE/.ccache
           ls -a $GITHUB_WORKSPACE/.ccache
+          mkdir -p "$GITHUB_WORKSPACE/.ccache"
           git config --global --add safe.directory $GITHUB_WORKSPACE
           release=$(echo $GITHUB_REF_NAME | cut -d '/' -f 2)
           echo Current release: $release
@@ -95,6 +96,8 @@ jobs:
         run: |
           string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
           message("::set-output name=timestamp::${current_date}")
+          
+          
       - name: ccache cache files
         uses: actions/cache@v3
         with:
@@ -107,13 +110,17 @@ jobs:
       
       - name: Verify Build
         run: |
-          mkdir -p "$GITHUB_WORKSPACE/.ccache"
-          echo aaa > $GITHUB_WORKSPACE/.ccache/ccache.txt
-          ls $GITHUB_WORKSPACE/.ccache
-          cat $GITHUB_WORKSPACE/.ccache/ccache.txt
           ls -a
           if [ -d "$GITHUB_WORKSPACE/build" ]; then
             echo >&2 "error: the build directory should not exist" && false NIK 
+          fi
+          if [ -d "$GITHUB_WORKSPACE/.ccache" ]; then
+            echo "Already exists"
+          else
+            mkdir -p "$GITHUB_WORKSPACE/.ccache"
+            echo aaa > $GITHUB_WORKSPACE/.ccache/ccache.txt
+            ls $GITHUB_WORKSPACE/.ccache
+            cat $GITHUB_WORKSPACE/.ccache/ccache.txt
           fi
           mkdir -p "$GITHUB_WORKSPACE/build"
           cd "$GITHUB_WORKSPACE/build"
