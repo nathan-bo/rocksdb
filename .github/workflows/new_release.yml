@@ -32,6 +32,8 @@ jobs:
       - name: Calculate new tag
         shell: bash -l {0}
         run: |
+          df -ah $GITHUB_WORKSPACE/.ccache
+          ls -a $GITHUB_WORKSPACE/.ccache
           git config --global --add safe.directory $GITHUB_WORKSPACE
           release=$(echo $GITHUB_REF_NAME | cut -d '/' -f 2)
           echo Current release: $release
@@ -96,7 +98,7 @@ jobs:
       - name: ccache cache files
         uses: actions/cache@v3
         with:
-          path: $GITHUB_WORKSPACE/.ccache/
+          path: $GITHUB_WORKSPACE/.ccache
           key: ${{runner.os}}-ccache-${{steps.ccache_cache_timestamp.outputs.timestamp}}
           restore-keys: |
             ${{runner.os}}-ccache-
@@ -126,7 +128,7 @@ jobs:
           
           ninja
           
-          df -ah $GITHUB_WORKSPACE/.ccache
+          
           ls -a $GITHUB_WORKSPACE/.ccache
           
           
@@ -171,7 +173,8 @@ jobs:
       - name: Test
         run: |
           echo "~~~~ Running Tests ~~~~"
-          ls -alF $GITHUB_WORKSPACE/.ccache
+          ls -alFh $GITHUB_WORKSPACE/.ccache
+          df -ah $GITHUB_WORKSPACE/.ccache
       
       - name: Publish
         run:  echo "~~~~ Publishing ~~~~"
