@@ -78,12 +78,12 @@ jobs:
           
         
       
-      - name: Update version.h
-        run: |
-          sed -i -e 's/SPEEDB_MAJOR.*/SPEEDB_MAJOR ${{ env.major }}/' speedb/version.h
-          sed -i -e 's/SPEEDB_MINOR.*/SPEEDB_MINOR ${{ env.minor }}/' speedb/version.h
-          sed -i -e 's/SPEEDB_PATCH.*/SPEEDB_PATCH ${{ env.patch }}/' speedb/version.h
-          cat speedb/version.h
+#       - name: Update version.h
+#         run: |
+#           sed -i -e 's/SPEEDB_MAJOR.*/SPEEDB_MAJOR ${{ env.major }}/' speedb/version.h
+#           sed -i -e 's/SPEEDB_MINOR.*/SPEEDB_MINOR ${{ env.minor }}/' speedb/version.h
+#           sed -i -e 's/SPEEDB_PATCH.*/SPEEDB_PATCH ${{ env.patch }}/' speedb/version.h
+#           cat speedb/version.h
           
           
           
