@@ -182,11 +182,11 @@ jobs:
           git clean -df
           git status
       
-      - name: Git Tag
-        run: |
-          git tag ${{ env.new_version }}
+#       - name: Git Tag
+#         run: |
+#           git tag ${{ env.new_version }}
       
-      - name: Git Push tag
-        run: |
-          git push --tags
-          git tag
+#       - name: Git Push tag
+#         run: |
+#           git push --tags
+#           git tag
