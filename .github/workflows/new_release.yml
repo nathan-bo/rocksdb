@@ -1,0 +1,192 @@
+name: Release
+
+on:
+  
+  push:
+   branches: [ release/* ]
+  workflow_dispatch:
+  
+permissions: write-all
+
+
+jobs:
+  
+  Release:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:3.14
+
+    steps:
+    
+    
+      - name: Pre-build
+        run: |
+          apk add git bash python3 py3-pip clang clang-extra-tools shellcheck gcc g++ cmake ninja ccache openjdk10 gflags-dev snappy-dev lz4-dev bzip2-dev zstd-dev zlib-dev linux-headers openssh-client tar
+          python3 -m pip install lint-diffs flake8
+    
+    
+      - name: Checkout
+        uses: actions/checkout@v2        
+        
+        
+      - name: Calculate new tag
+        shell: bash -l {0}
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          release=$(echo $GITHUB_REF_NAME | cut -d '/' -f 2)
+          echo Current release: $release
+          env
+          git tag -l
+          git tag | xargs git tag -d
+          git fetch --tags
+          git tag -l
+          last_tag=$(git tag -l --sort=v:refname | grep $release | tail -1)
+          echo Current last tag: $last_tag
+          if [[ -z $last_tag ]]; then
+            full_version="${release}.0"
+            echo "no tags for this release, new tag: $full_version"
+            regex="([0-9]*).([0-9]*).([0-9]*)"
+            if [[ $full_version =~ $regex ]]; then
+              major="${BASH_REMATCH[1]}"
+              minor="${BASH_REMATCH[2]}"
+              patch="${BASH_REMATCH[3]}"
+              patch=$(echo $patch + 1 | bc)
+              echo "New version: $major.$minor.$patch"
+              new_version="$major.$minor.$patch"
+              echo $new_version
+              echo "new_version=$new_version" >> $GITHUB_ENV
+              echo "major=$major" >> $GITHUB_ENV
+              echo "minor=$minor" >> $GITHUB_ENV
+              echo "patch=$patch" >> $GITHUB_ENV
+            fi
+          else
+            regex="([0-9]*).([0-9]*).([0-9]*)"
+            if [[ $last_tag =~ $regex ]]; then
+              major="${BASH_REMATCH[1]}"
+              minor="${BASH_REMATCH[2]}"
+              patch="${BASH_REMATCH[3]}"
+              patch=$(echo $patch + 1 | bc)
+              echo "New version: $major.$minor.$patch"
+              new_version="$major.$minor.$patch"
+              echo $new_version
+              echo "new_version=$new_version" >> $GITHUB_ENV
+              echo "major=$major" >> $GITHUB_ENV
+              echo "minor=$minor" >> $GITHUB_ENV
+              echo "patch=$patch" >> $GITHUB_ENV
+            fi
+          fi
+          
+        
+      
+      - name: Update version.h
+        run: |
+          sed -i -e 's/SPEEDB_MAJOR.*/SPEEDB_MAJOR ${{ env.major }}/' speedb/version.h
+          sed -i -e 's/SPEEDB_MINOR.*/SPEEDB_MINOR ${{ env.minor }}/' speedb/version.h
+          sed -i -e 's/SPEEDB_PATCH.*/SPEEDB_PATCH ${{ env.patch }}/' speedb/version.h
+          cat speedb/version.h
+          
+          
+          
+      - name: Prepare ccache timestamp
+        id: ccache_cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          message("::set-output name=timestamp::${current_date}")
+      - name: ccache cache files
+        uses: actions/cache@v3
+        with:
+          path: $GITHUB_WORKSPACE/.ccache/
+          key: ${{runner.os}}-ccache-${{steps.ccache_cache_timestamp.outputs.timestamp}}
+          restore-keys: |
+            ${{runner.os}}-ccache-
+          
+        
+      
+      - name: Verify Build
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.ccache"
+          echo aaa > $GITHUB_WORKSPACE/.ccache/ccache.txt
+          ls $GITHUB_WORKSPACE/.ccache
+          cat $GITHUB_WORKSPACE/.ccache/ccache.txt
+          ls -a
+          if [ -d "$GITHUB_WORKSPACE/build" ]; then
+            echo >&2 "error: the build directory should not exist" && false NIK 
+          fi
+          mkdir -p "$GITHUB_WORKSPACE/build"
+          cd "$GITHUB_WORKSPACE/build"
+          export "CCACHE_BASEDIR=$CI_PROJECT_DIR"
+          export "CCACHE_DIR=$CI_PROJECT_DIR/.ccache"
+          export "CCACHE_COMPILERCHECK=content"
+          cmake .. -GNinja -DWITH_GFLAGS=1 \
+          -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
+          -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
+          -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
+          -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
+          
+          ninja
+          
+          ls -a $GITHUB_WORKSPACE/.ccache
+          
+          
+#       - name: Optimized Build
+#         run: |
+#           if [ -d "$GITHUB_WORKSPACE/build" ]; then
+#             rm -rf $GITHUB_WORKSPACE/build
+#           fi
+#           mkdir -p "$GITHUB_WORKSPACE/build"
+#           cd "$GITHUB_WORKSPACE/build"
+#           export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
+#           export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
+#           export "CCACHE_COMPILERCHECK=content"
+#           cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja -DWITH_GFLAGS=1 \
+#           -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
+#           -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
+#           -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
+#           -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
+#           ninja
+          
+#       - name: Clang Build
+#         run: |
+          
+#           if [ -d "$GITHUB_WORKSPACE/build" ]; then
+#             rm -rf $GITHUB_WORKSPACE/build
+#           fi
+          
+#           mkdir -p "$GITHUB_WORKSPACE/build"
+#           cd "$GITHUB_WORKSPACE/build"
+#           export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
+#           export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
+#           export "CCACHE_COMPILERCHECK=content"
+          
+#           CC=clang CXX=clang++ cmake .. -GNinja -DWITH_GFLAGS=1 \
+#           -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
+#           -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
+#           -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
+#           -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
+          
+#           ninja
+          
+      - name: Test
+        run: |
+          echo "~~~~ Running Tests ~~~~"
+          ls -a $GITHUB_WORKSPACE/.ccache
+      
+      - name: Publish
+        run:  echo "~~~~ Publishing ~~~~"
+      
+      - name: Git Reset
+        run: |
+          cd $GITHUB_WORKSPACE
+          git reset --hard
+          git clean -df
+          git status
+      
+      - name: Git Tag
+        run: |
+          git tag ${{ env.new_version }}
+      
+      - name: Git Push tag
+        run: |
+          git push --tags
+          git tag
