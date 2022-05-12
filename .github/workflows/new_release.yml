@@ -115,8 +115,8 @@ jobs:
           fi
           mkdir -p "$GITHUB_WORKSPACE/build"
           cd "$GITHUB_WORKSPACE/build"
-          export "CCACHE_BASEDIR=$CI_PROJECT_DIR"
-          export "CCACHE_DIR=$CI_PROJECT_DIR/.ccache"
+          export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
+          export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
           export "CCACHE_COMPILERCHECK=content"
           cmake .. -GNinja -DWITH_GFLAGS=1 \
           -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
