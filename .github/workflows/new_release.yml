@@ -126,6 +126,7 @@ jobs:
           
           ninja
           
+          df -ah $GITHUB_WORKSPACE/.ccache
           ls -a $GITHUB_WORKSPACE/.ccache
           
           
@@ -170,7 +171,7 @@ jobs:
       - name: Test
         run: |
           echo "~~~~ Running Tests ~~~~"
-          ls -a $GITHUB_WORKSPACE/.ccache
+          ls -alF $GITHUB_WORKSPACE/.ccache
       
       - name: Publish
         run:  echo "~~~~ Publishing ~~~~"
