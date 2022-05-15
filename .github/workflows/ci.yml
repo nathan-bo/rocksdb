@@ -112,5 +112,12 @@ jobs:
     - name: Test
       run: |
         echo "~~~~ Running Tests ~~~~"
+        cmake ../../db_stress_tool -GNinja -DWITH_GFLAGS=1 \
+        -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
+        -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
+        -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
+        -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
+
+        ninja
         ls -alFh ~/.ccache
         df -ah ~/.ccache
