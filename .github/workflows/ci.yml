@@ -44,6 +44,7 @@ jobs:
       
     - name: Verify Build
       run: |
+        git config --global --add safe.directory /__w/rocksdb/rocksdb
         if [ -d "$GITHUB_WORKSPACE/build" ]; then
           echo >&2 "error: the build directory should not exist" && false NIK 
         fi
