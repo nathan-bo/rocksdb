@@ -43,6 +43,7 @@ jobs:
       
     - name: Verify Build
       run: |
+        ls /etc/apk/world
         git config --global --add safe.directory $GITHUB_WORKSPACE
         if [ -d "$GITHUB_WORKSPACE/build" ]; then
           echo >&2 "error: the build directory should not exist" && false NIK 
