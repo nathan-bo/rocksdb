@@ -34,7 +34,8 @@ jobs:
     - name: ccache cache files
       uses: actions/cache@v2
       with:
-        path: $GITHUB_WORKSPACE/.ccache
+        path: |
+          ~/.ccache
         key: ${{runner.os}}-ccache-${{steps.ccache_cache_timestamp.outputs.timestamp}}
         restore-keys: |
           ${{runner.os}}-ccache-
@@ -46,18 +47,18 @@ jobs:
         if [ -d "$GITHUB_WORKSPACE/build" ]; then
           echo >&2 "error: the build directory should not exist" && false NIK 
         fi
-        if [ -d "$GITHUB_WORKSPACE/.ccache" ]; then
+        if [ -d "~/.ccache" ]; then
           echo "Already exists"
         else
-          mkdir -p "$GITHUB_WORKSPACE/.ccache"
-          echo aaa > $GITHUB_WORKSPACE/.ccache/ccache.txt
-          ls $GITHUB_WORKSPACE/.ccache
-          cat $GITHUB_WORKSPACE/.ccache/ccache.txt
+          mkdir -p "~/.ccache"
+          echo aaa > ~/.ccache/ccache.txt
+          ls ~/.ccache
+          cat ~/.ccache/ccache.txt
         fi
         mkdir -p "$GITHUB_WORKSPACE/build"
         cd "$GITHUB_WORKSPACE/build"
-        export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
-        export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
+        export "CCACHE_BASEDIR=~"
+        export "CCACHE_DIR=~/.ccache"
         export "CCACHE_COMPILERCHECK=content"
         cmake .. -GNinja -DWITH_GFLAGS=1 \
         -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
@@ -109,5 +110,5 @@ jobs:
     - name: Test
       run: |
         echo "~~~~ Running Tests ~~~~"
-        ls -alFh $GITHUB_WORKSPACE/.ccache
-        df -ah $GITHUB_WORKSPACE/.ccache
+        ls -alFh ~/.ccache
+        df -ah ~/.ccache
