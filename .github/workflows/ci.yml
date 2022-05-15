@@ -59,8 +59,8 @@ jobs:
         fi
         mkdir -p "$GITHUB_WORKSPACE/build"
         cd "$GITHUB_WORKSPACE/build"
-        export "CCACHE_BASEDIR=~"
-        export "CCACHE_DIR=~/.ccache"
+        export "CCACHE_BASEDIR=/github/home/"
+        export "CCACHE_DIR=/github/home/.ccache"
         export "CCACHE_COMPILERCHECK=content"
         cmake .. -GNinja -DWITH_GFLAGS=1 \
         -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
