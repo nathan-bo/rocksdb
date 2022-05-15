@@ -44,9 +44,9 @@ jobs:
       
     - name: Verify Build
       run: |
-        if [ -d "$GITHUB_WORKSPACE/build" ]; then
-          echo >&2 "error: the build directory should not exist" && false NIK 
-        fi
+        #if [ -d "$GITHUB_WORKSPACE/build" ]; then
+        #  echo >&2 "error: the build directory should not exist" && false NIK 
+        #fi
         if [ -d "~/.ccache" ]; then
           echo "Already exists"
         else
