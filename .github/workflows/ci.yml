@@ -32,7 +32,7 @@ jobs:
         
         
     - name: ccache cache files
-      uses: actions/cache@v3
+      uses: actions/cache@v2
       with:
         path: $GITHUB_WORKSPACE/.ccache
         key: ${{runner.os}}-ccache-${{steps.ccache_cache_timestamp.outputs.timestamp}}
