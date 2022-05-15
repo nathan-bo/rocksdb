@@ -51,7 +51,7 @@ jobs:
           echo "Already exists"
         else
           mkdir -p "~/.ccache"
-          ls ~ | grep cache
+          ls ~ | grep cache || echo ""
           touch ~/.ccache/ccache.txt
           echo "aaa" > ~/.ccache/ccache.txt
           ls ~/.ccache
