@@ -34,8 +34,7 @@ jobs:
     - name: ccache cache files
       uses: actions/cache@v2
       with:
-        path: |
-          ~/.ccache
+        path: ~/.ccache
         key: ${{runner.os}}-ccache-${{steps.ccache_cache_timestamp.outputs.timestamp}}
         restore-keys: |
           ${{runner.os}}-ccache-
