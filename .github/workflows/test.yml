@@ -1,13 +1,11 @@
 name: test
 
 on:
-
   workflow_dispatch:
 
 jobs:
-  call-workflow-passing-data:
+  ci_workflow:
     uses: nathan-bo/workflows/.github/workflows/ci-workflow.yml@main
     with:
       username: ${{ inputs.username }}
       token: ${{ secrets.token }}
-
