@@ -8,5 +8,5 @@ jobs:
   call-workflow-passing-data:
     uses: nathan-bo/workflows/.github/workflows/ci-workflow.yml@main #octo-org/example-repo/.github/workflows/reusable-workflow.yml@main
     with:
-      username: ${{ secrets.username }}
+      username: ${{ secrets.USERNAME }}
     secrets: inherit
