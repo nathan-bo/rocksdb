@@ -4,6 +4,13 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: hello
+      - run: echo hello world
+
   ci_workflow:
     uses: nathan-bo/nathan-tests/.github/workflows/ci-workflow.yml@main
 #     with:
