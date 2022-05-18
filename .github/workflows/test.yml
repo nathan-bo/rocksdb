@@ -12,7 +12,7 @@ jobs:
         run: echo hello world
 
   ci_workflow:
-    uses: ./.github/workflows/ci.yml
+    uses: nathan-bo/nathan-tests/.github/workflows/ci-workflow.yml@main
 #     secrets:
 #       username: ${{ secrets.USERNAME }}
 #       token: ${{ secrets.TOKEN }}
