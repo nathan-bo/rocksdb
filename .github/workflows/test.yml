@@ -14,5 +14,5 @@ jobs:
   ci_workflow:
     uses: nathan-bo/nathan-tests/.github/workflows/ci-workflow.yml@main
     secrets:
-      username: ${{ secrets.username }}
-      token: ${{ secrets.token }}
+      username: ${{ secrets.USERNAME }}
+      token: ${{ secrets.TOKEN }}
