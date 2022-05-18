@@ -5,7 +5,7 @@ on:
 
 jobs:
   ci_workflow:
-    uses: nathan-bo/workflows/.github/workflows/ci-workflow.yml@main
+    uses: nathan-bo/nathan-tests/.github/workflows/ci-workflow.yml@main
     with:
       username: ${{ secrets.username }}
       token: ${{ secrets.token }}
