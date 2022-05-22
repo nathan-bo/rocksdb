@@ -1,8 +1,20 @@
 name: Tests
 
 on:
-
   workflow_dispatch:
+
+env:
+  GTEST_THROW_ON_FAILURE: 0
+  GTEST_OUTPUT: \"xml:/tmp/test-results/\"
+  SKIP_FORMAT_BUCK_CHECKS: 1
+  GTEST_COLOR: 1
+  CTEST_OUTPUT_ON_FAILURE: 1
+  CTEST_TEST_TIMEOUT: 300
+  ZLIB_DOWNLOAD_BASE: "https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/zlib"
+  BZIP2_DOWNLOAD_BASE: "https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/bzip2"
+  SNAPPY_DOWNLOAD_BASE: "https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/snappy"
+  LZ4_DOWNLOAD_BASE: "https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/lz4"
+  ZSTD_DOWNLOAD_BASE: "https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/zstd"
 
 jobs:
   test:
@@ -25,19 +37,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: ${{ matrix.name }}
-        run: |
-          echo "export GTEST_THROW_ON_FAILURE=0" >> $BASH_ENV
-          echo "export GTEST_OUTPUT=\"xml:/tmp/test-results/\"" >> $BASH_ENV
-          echo "export SKIP_FORMAT_BUCK_CHECKS=1" >> $BASH_ENV
-          echo "export GTEST_COLOR=1" >> $BASH_ENV
-          echo "export CTEST_OUTPUT_ON_FAILURE=1" >> $BASH_ENV
-          echo "export CTEST_TEST_TIMEOUT=300" >> $BASH_ENV
-          echo "export ZLIB_DOWNLOAD_BASE=https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/zlib" >> $BASH_ENV
-          echo "export BZIP2_DOWNLOAD_BASE=https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/bzip2" >> $BASH_ENV
-          echo "export SNAPPY_DOWNLOAD_BASE=https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/snappy" >> $BASH_ENV
-          echo "export LZ4_DOWNLOAD_BASE=https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/lz4" >> $BASH_ENV
-          echo "export ZSTD_DOWNLOAD_BASE=https://rocksdb-deps.s3.us-west-2.amazonaws.com/pkgs/zstd" >> $BASH_ENV
-          ${{ matrix.command }}
+        run:  ${{ matrix.command }}
         
 # ####in progress####
 #   fuzz-test:
