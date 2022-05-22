@@ -23,15 +23,15 @@ jobs:
       matrix:
         include:
           - name: unit-test
-            command: make -j16 check && echo $? || echo $?
+            command: make clean && make -j16 check && echo $? || echo $?
           - mame: black box
-            command: CRASH_TEST_EXT_ARGS="--duration=500" make -j16 blackbox_asan_crash_test && echo $? || echo $?
+            command: make clean && CRASH_TEST_EXT_ARGS="--duration=500" make -j16 blackbox_asan_crash_test && echo $? || echo $?
           - mame: white box
-            command: CRASH_TEST_EXT_ARGS="--duration=500" make -j16 whitebox_asan_crash_test && echo $? || echo $?
+            command: make clean && CRASH_TEST_EXT_ARGS="--duration=500" make -j16 whitebox_asan_crash_test && echo $? || echo $?
     steps:
     
       - name: Pre
-        run: sudo apt-get update -y && sudo apt-get install -y libgflags-dev
+        run: sudo apt-get update -y && sudo apt-get install -y libgflags-dev libsnappy-dev ninja-build
     
       - name: Checkout
         uses: actions/checkout@v3
