@@ -1,8 +1,6 @@
 name: Tests
 
 on:
-  push:
-    branches: [ main ]
 
   workflow_dispatch:
 
@@ -13,11 +11,11 @@ jobs:
       matrix:
         include:
           - name: unit-test
-            command: make check && echo $?
+            command: make -j16 check && echo $?
           - mame: black box
-            command: CRASH_TEST_EXT_ARGS="--duration=500" make blackbox_asan_crash_test && echo $?
+            command: CRASH_TEST_EXT_ARGS="--duration=500" make -j16 blackbox_asan_crash_test && echo $?
           - mame: white box
-            command: CRASH_TEST_EXT_ARGS="--duration=500" make whitebox_asan_crash_test && echo $?
+            command: CRASH_TEST_EXT_ARGS="--duration=500" make -j16 whitebox_asan_crash_test && echo $?
     steps:
     
     
