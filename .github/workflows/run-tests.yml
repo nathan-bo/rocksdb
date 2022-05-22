@@ -18,6 +18,8 @@ jobs:
             command: CRASH_TEST_EXT_ARGS="--duration=500" make -j16 whitebox_asan_crash_test && echo $?
     steps:
     
+      - name: Pre
+        run: apk update && install gflags
     
       - name: Checkout
         uses: actions/checkout@v3
