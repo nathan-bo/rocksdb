@@ -19,7 +19,7 @@ jobs:
     steps:
     
       - name: Pre
-        run: sudo apt-get install libgflags2 libgflags-dev
+        run: sudo apt-get install libgflags-dev
     
       - name: Checkout
         uses: actions/checkout@v3
