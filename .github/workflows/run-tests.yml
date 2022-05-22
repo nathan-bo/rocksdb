@@ -31,7 +31,7 @@ jobs:
     steps:
     
       - name: Pre
-        run: sudo apt-get update -y && sudo apt-get install -y libgflags-dev libsnappy-dev ninja-build
+        run: sudo apt-get update -y && sudo apt-get install -y build-essential libgflags-dev libsnappy-dev ninja-build
     
       - name: Checkout
         uses: actions/checkout@v3
