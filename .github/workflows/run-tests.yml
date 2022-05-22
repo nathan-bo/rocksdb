@@ -19,7 +19,7 @@ jobs:
     steps:
     
       - name: Pre
-        run: apk update && install gflags
+        run: apt update && install gflags
     
       - name: Checkout
         uses: actions/checkout@v3
