@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: unit-test
+            command: make check && echo $?
+          - mame: black box
+            command: CRASH_TEST_EXT_ARGS="--duration=500" make blackbox_asan_crash_test && echo $?
+          - mame: white box
+            command: CRASH_TEST_EXT_ARGS="--duration=500" make whitebox_asan_crash_test && echo $?
+    steps:
+    
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: ${{ matrix.name }}
+        run: ${{ matrix.command }}
+        
+# ####in progress####
+#   fuzz-test:
+#     uses: speedb-io/rocksdb/.github/workflows/fuzz-test@main
