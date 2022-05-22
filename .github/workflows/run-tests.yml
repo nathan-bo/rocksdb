@@ -19,7 +19,7 @@ jobs:
     steps:
     
       - name: Pre
-        run: apt update && install gflags
+        run: apt install gflags
     
       - name: Checkout
         uses: actions/checkout@v3
