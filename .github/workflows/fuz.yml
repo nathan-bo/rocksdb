@@ -6,21 +6,25 @@ on:
 
 jobs:
   fuzz-build:
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:18.04
+    runs-on: ubuntu-18.04
+#     container:
+#       image: ubuntu:18.04
 
     steps:
-      - uses: actions/checkout@v3
-
+    
       - name: Pre-build
-        run: apt update && apt install -y sudo python3 git clang-tools cmake make automake libtool gettext pkg-config build-essential clang-10 zlib1g-dev libbz2-dev ninja-build liblzma-dev autoconf libsnappy-dev libzstd-dev liblz4-dev binutils m4 g++-10
+        run: sudo apt update && sudo apt install -y python3 git clang-tools cmake make automake libtool gettext pkg-config build-essential clang-10 zlib1g-dev libbz2-dev ninja-build liblzma-dev autoconf libsnappy-dev libzstd-dev liblz4-dev binutils m4 g++-10
 
+      - name: Checkout
+        uses: actions/checkout@v2 
+      
       - name: fuzbuild
         run: |
            echo "test"
            pwd
-           echo 'git clone https://github.com/google/libprotobuf-mutator.git \n
+           git status
+           ls -alFh
+           echo -en 'git clone https://github.com/google/libprotobuf-mutator.git \n
            cd libprotobuf-mutator \n
            git checkout ffd86a32874e5c08a143019aad1aaf0907294c9f \n
            cd .. \n
@@ -34,8 +38,10 @@ jobs:
            export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/ \n
            export PATH=$PWD/external.protobuf/bin:$PATH \n
            cd $GITHUB_WORKSPACE \n
-           git fetch \n
-           git checkout master \n
+           ls -alFh \n
+           git status \n
+           # git fetch \n
+           # git checkout main \n
            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
            cd $GITHUB_WORKSPACE/fuzz \n
            make db_map_fuzzer db_fuzzer \n
@@ -129,4 +135,4 @@ jobs:
         run: |
           tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." 
           echo "------------------------"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." 
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\."
