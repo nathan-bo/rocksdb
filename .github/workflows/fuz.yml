@@ -21,7 +21,7 @@ jobs:
            echo $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
            echo "test"
            pwd
-           echo -en 'git clone https://github.com/google/libprotobuf-mutator.git \n
+           echo 'git clone https://github.com/google/libprotobuf-mutator.git \n
            cd libprotobuf-mutator \n
            git checkout ffd86a32874e5c08a143019aad1aaf0907294c9f \n
            cd .. \n
