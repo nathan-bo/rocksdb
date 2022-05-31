@@ -34,6 +34,8 @@ jobs:
            export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/ \n
            export PATH=$PWD/external.protobuf/bin:$PATH \n
            cd $GITHUB_WORKSPACE \n
+           ls -alFh \n
+           git status \n
            git fetch \n
            git checkout master \n
            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
