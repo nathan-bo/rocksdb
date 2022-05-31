@@ -11,11 +11,12 @@ jobs:
       image: ubuntu:18.04
 
     steps:
-      - uses: actions/checkout@v3
-
+    
       - name: Pre-build
         run: apt update && apt install -y sudo python3 git clang-tools cmake make automake libtool gettext pkg-config build-essential clang-10 zlib1g-dev libbz2-dev ninja-build liblzma-dev autoconf libsnappy-dev libzstd-dev liblz4-dev binutils m4 g++-10
 
+      - uses: actions/checkout@v3
+      
       - name: fuzbuild
         run: |
            echo "test"
