@@ -34,9 +34,10 @@ jobs:
            export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/ \n
            export PATH=$PWD/external.protobuf/bin:$PATH \n
            cd $GITHUB_WORKSPACE \n
+           git fetch \n
+           git checkout master \n
            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
            cd $GITHUB_WORKSPACE/fuzz \n
-           echo "db_map_fuzzer db_fuzzer" \n
            make db_map_fuzzer db_fuzzer \n
            echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
            cat prepfuz.sh     
