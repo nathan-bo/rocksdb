@@ -18,6 +18,9 @@ jobs:
 
       - name: fuzbuild
         run: |
+           repo="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+           echo $repo
+           git remote set-url origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
            echo "test"
            pwd
            echo 'git clone https://github.com/google/libprotobuf-mutator.git \n
