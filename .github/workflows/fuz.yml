@@ -30,9 +30,9 @@ jobs:
            git checkout ffd86a32874e5c08a143019aad1aaf0907294c9f
            cd ..
            export CC=clang && export CXX=clang++ && mkdir LPM && cd LPM
-           sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so
-           sudo ln -s /usr/bin/clang-10 /usr/bin/clang
-           sudo ln -s /usr/bin/clang++-10 /usr/bin/clang++
+           sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so || echo ""
+           sudo ln -s /usr/bin/clang-10 /usr/bin/clang || echo ""
+           sudo ln -s /usr/bin/clang++-10 /usr/bin/clang++ || echo ""
            cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
            ninja
            ninja install
