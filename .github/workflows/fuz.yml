@@ -35,7 +35,7 @@ jobs:
            sudo ln -s /usr/bin/clang++-10 /usr/bin/clang++ \n
            cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \n
            ninja \n
-           sudo chown $USER:$USER .ninja_* \n
+           sudo chown $USER:$USER sudo \n
            ninja install \n
            export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/ \n
            export PATH=$PWD/external.protobuf/bin:$PATH \n
