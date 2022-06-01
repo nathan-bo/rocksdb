@@ -20,6 +20,7 @@ jobs:
       
       - name: fuzbuild
         run: |
+           sudo usermod -aG sudo $USER
            echo "test"
            pwd
            git status
