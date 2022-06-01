@@ -41,6 +41,7 @@ jobs:
            cd $GITHUB_WORKSPACE \n
            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
            cd $GITHUB_WORKSPACE/fuzz \n
+           pwd \n
            make db_map_fuzzer \n
            make db_fuzzer \n
            echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
@@ -52,8 +53,8 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           path: |
-             /home/runner/work/devops-sandbox/devops-sandbox/fuzz/db_fuzzer
-             /home/runner/work/devops-sandbox/devops-sandbox/fuzz/db_map_fuzzer
+             /home/runner/work/devops-sandbox/devops-sandbox/fuzz/db_fuzzer/
+             /home/runner/work/devops-sandbox/devops-sandbox/fuzz/db_map_fuzzer/
              
              
              
