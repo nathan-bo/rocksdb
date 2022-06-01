@@ -25,28 +25,28 @@ jobs:
            echo "test"
            pwd
            git status
-           git clone https://github.com/google/libprotobuf-mutator.git
-           cd libprotobuf-mutator
-           git checkout ffd86a32874e5c08a143019aad1aaf0907294c9f
-           cd ..
-           export CC=clang && export CXX=clang++ && mkdir LPM && cd LPM
-           sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so || echo ""
-           sudo ln -s /usr/bin/clang-10 /usr/bin/clang || echo ""
-           sudo ln -s /usr/bin/clang++-10 /usr/bin/clang++ || echo ""
-           cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
-           ninja
-           ninja install
-           export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/
-           export PATH=$PWD/external.protobuf/bin:$PATH
-           cd $GITHUB_WORKSPACE
-           COMPILE_WITH_ASAN=1 make -j2 static_lib
-           cd $GITHUB_WORKSPACE/fuzz
-           make db_map_fuzzer
-           make db_fuzzer
-           # echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
-           # cat prepfuz.sh     
-           # chmod +x prepfuz.sh
-           # bash -xv prepfuz.sh
+           echo -en 'git clone https://github.com/google/libprotobuf-mutator.git \n
+            cd libprotobuf-mutator \n
+            git checkout ffd86a32874e5c08a143019aad1aaf0907294c9f \n
+            cd .. \n
+            export CC=clang && export CXX=clang++ && mkdir LPM && cd LPM \n
+            sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so \n
+            sudo ln -s /usr/bin/clang-10 /usr/bin/clang \n
+            sudo ln -s /usr/bin/clang++-10 /usr/bin/clang++ \n
+            sudo cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \n
+            ninja \n
+            ninja install \n
+            export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/ \n
+            export PATH=$PWD/external.protobuf/bin:$PATH \n
+            cd $GITHUB_WORKSPACE \n
+            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
+            cd $GITHUB_WORKSPACE/fuzz \n
+            make db_map_fuzzer \n
+            make db_fuzzer \n
+            echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
+            cat prepfuz.sh     
+            chmod +x prepfuz.sh
+            bash -xv prepfuz.sh
            
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
