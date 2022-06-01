@@ -32,7 +32,7 @@ jobs:
            sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so \n
            sudo ln -s /usr/bin/clang-10 /usr/bin/clang \n
            sudo ln -s /usr/bin/clang++-10 /usr/bin/clang++ \n
-           cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \n
+           sudo cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=OFF -DCMAKE_BUILD_TYPE=Release \n
            ninja \n
            ninja install \n
            export PKG_CONFIG_PATH=$PWD:$PWD/external.protobuf/lib/pkgconfig/ \n
