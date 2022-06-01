@@ -18,10 +18,8 @@ jobs:
 
       - name: fuzbuild
         run: |
-           usermod -aG sudo $USER
            echo "test"
            pwd
-           usermod -aG sudo $USER
            echo 'git clone https://github.com/google/libprotobuf-mutator.git \n
              cd libprotobuf-mutator \n
              git checkout ffd86a32874e5c08a143019aad1aaf0907294c9f \n
