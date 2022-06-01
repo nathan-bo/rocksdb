@@ -53,8 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           path: |
-             ${{ github.workspace }}/fuzz/db_fuzzer
-             ${{ github.workspace }}/fuzz/db_map_fuzzer
+             ${{ github.workspace }}/fuzz/
              
              
              
@@ -71,7 +70,7 @@ jobs:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
         with:
-          path: ${GITHUB_WORKSPACE}/fuzz/db_fuzzer
+          path: ${GITHUB_WORKSPACE}/fuzz/
       
       - name: Pre-build
         run: |
@@ -101,11 +100,11 @@ jobs:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
         with:
-          path: ${GITHUB_WORKSPACE}/fuzz/db_map_fuzzer
+          path: ${GITHUB_WORKSPACE}/fuzz/
       
       - name: Pre-build
         run: |
-          apt update && apt install apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
+          apt update && apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
           sudo $GITHUB_WORKSPACE/out/
           
       - name: dbmapfuzzer
