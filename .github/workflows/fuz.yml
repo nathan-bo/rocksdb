@@ -43,6 +43,8 @@ jobs:
              cd $GITHUB_WORKSPACE/fuzz \n
              make db_map_fuzzer \n
              make db_fuzzer \n
+             ls -alFh $GITHUB_WORKSPACE/fuzz/db_fuzzer
+             ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer
              echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
            cat prepfuz.sh     
            chmod +x prepfuz.sh
