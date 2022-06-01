@@ -40,8 +40,8 @@ jobs:
            cd $GITHUB_WORKSPACE \n
            ls -alFh \n
            git status \n
-           # git fetch \n
-           # git checkout main \n
+           git fetch \n
+           git checkout main \n
            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
            cd $GITHUB_WORKSPACE/fuzz \n
            make db_fuzzer db_map_fuzzer \n
