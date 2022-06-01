@@ -43,8 +43,7 @@ jobs:
              cd $GITHUB_WORKSPACE/fuzz \n
              make db_map_fuzzer \n
              make db_fuzzer \n
-             ls -alFh $GITHUB_WORKSPACE/fuzz/db_fuzzer/
-             ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/
+             ls -alFh $GITHUB_WORKSPACE/fuzz/ \n
              echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
            cat prepfuz.sh     
            chmod +x prepfuz.sh
@@ -54,28 +53,30 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           path: |
-             $GITHUB_WORKSPACE/fuzz/db_fuzzer/
-             $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/
+             ${GITHUB_WORKSPACE}/fuzz/db_fuzzer
+             ${GITHUB_WORKSPACE}/fuzz/db_map_fuzzer
              
              
              
   db_fuzzer:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:18.04
     continue-on-error: true
     needs: [fuzz-build]
       
     steps:
       - uses: actions/checkout@v3
-          
-      - name: Pre-build
-        run: |
-          sudo apt update && sudo apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4
-          sudo mkdir -p $GITHUB_WORKSPACE/out
-          
+      
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
         with:
-          path: /home/runner/work/devops-sandbox/devops-sandbox/fuzz/db_fuzzer
+          path: ${GITHUB_WORKSPACE}/fuzz/db_fuzzer
+      
+      - name: Pre-build
+        run: |
+          apt update && apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4
+          mkdir -p $GITHUB_WORKSPACE/out
 
       - name: dbfuzzer
         run: |
@@ -85,25 +86,27 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          path: /home/runner/work/devops-sandbox/devops-sandbox/out/db_fuzzer.log
+          path: ${GITHUB_WORKSPACE}/out/db_fuzzer.log
 
   db_map_fuzzer:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:18.04
     continue-on-error: true
     needs:  [fuzz-build]
     
     steps:
       - uses: actions/checkout@v3
       
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          path: ${GITHUB_WORKSPACE}/fuzz/db_map_fuzzer
+      
       - name: Pre-build
         run: |
           sudo apt update && sudo apt install apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
           sudo $GITHUB_WORKSPACE/out/
-      
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.0
-        with:
-          path: /home/runner/work/devops-sandbox/devops-sandbox/fuzz/db_map_fuzzer
           
       - name: dbmapfuzzer
         run: |
@@ -113,7 +116,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          path: /home/runner/work/devops-sandbox/devops-sandbox/out/db_map_fuzzer.log
+          path: ${GITHUB_WORKSPACE}/out/db_map_fuzzer.log
           
   fuzzer_sum:
     runs-on: ubuntu-18.04
@@ -128,11 +131,11 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           path: |
-            /home/runner/work/devops-sandbox/devops-sandbox/out/db_map_fuzzer.log
-            /home/runner/work/devops-sandbox/devops-sandbox/out/db_fuzzer.log
+            ${GITHUB_WORKSPACE}/out/db_map_fuzzer.log
+            ${GITHUB_WORKSPACE}/out/db_fuzzer.log
       
       - name: fuzzersum
         run: |
-          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." 
+          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
           echo "------------------------"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\."
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
