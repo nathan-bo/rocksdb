@@ -18,9 +18,9 @@ jobs:
 
       - name: fuzbuild
         run: |
-           repo="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-           echo repo $repo
-           git remote add origin $repo
+           #repo="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+           #echo repo $repo
+           #git remote add origin $repo
            echo "test"
            pwd
            echo 'git clone https://github.com/google/libprotobuf-mutator.git \n
@@ -41,7 +41,8 @@ jobs:
              git checkout master \n
              COMPILE_WITH_ASAN=1 make -j2 static_lib \n
              cd $GITHUB_WORKSPACE/fuzz \n
-             make db_map_fuzzer db_fuzzer \n
+             make db_map_fuzzer \n
+             make db_fuzzer \n
              echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
            cat prepfuz.sh     
            chmod +x prepfuz.sh
