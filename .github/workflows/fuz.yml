@@ -45,7 +45,10 @@ jobs:
            git checkout main \n
            COMPILE_WITH_ASAN=1 make -j2 static_lib \n
            cd $GITHUB_WORKSPACE/fuzz \n
-           make db_fuzzer db_map_fuzzer \n
+           make db_map_fuzzer \n
+           ls $GITHUB_WORKSPACE/fuzz/
+           make db_fuzzer \n
+           ls $GITHUB_WORKSPACE/fuzz/
            echo ASAN_OPTIONS=detect_leaks=0 ./db_fuzzer \n' > prepfuz.sh
            cat prepfuz.sh     
            chmod +x prepfuz.sh
