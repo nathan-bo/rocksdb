@@ -18,7 +18,7 @@ jobs:
 
       - name: fuzbuild
         run: |
-           sudo usermod -aG sudo $USER
+           usermod -aG sudo $USER
            echo "test"
            pwd
            usermod -aG sudo $USER
