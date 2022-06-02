@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_fuzzer
-          path: ${GITHUB_WORKSPACE}/fuzz/db_fuzzer*
+          path: ${{ github.workspace }}/fuzz/db_fuzzer*
       
       - name: Pre-build
         run: |
@@ -94,7 +94,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          path: ${GITHUB_WORKSPACE}/out/db_fuzzer.log
+          path: ${{ github.workspace }}/out/db_fuzzer.log
 
   db_map_fuzzer:
     runs-on: ubuntu-latest
@@ -110,7 +110,7 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_map_fuzzer
-          path: ${GITHUB_WORKSPACE}/fuzz/db_map_fuzzer
+          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
       
       - name: Pre-build
         run: |
@@ -126,7 +126,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          path: ${GITHUB_WORKSPACE}/out/db_map_fuzzer.log
+          path: ${{ github.workspace }}/out/db_map_fuzzer.log
           
   fuzzer_sum:
     runs-on: ubuntu-18.04
@@ -141,8 +141,8 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           path: |
-            ${GITHUB_WORKSPACE}/out/db_map_fuzzer.log
-            ${GITHUB_WORKSPACE}/out/db_fuzzer.log
+            ${{ github.workspace }}/out/db_map_fuzzer.log
+            ${{ github.workspace }}/out/db_fuzzer.log
       
       - name: fuzzersum
         run: |
