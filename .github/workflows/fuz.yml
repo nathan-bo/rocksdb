@@ -114,7 +114,7 @@ jobs:
       
       - name: Pre-build
         run: |
-          apt update && apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
+          apt update && apt install -y sudo libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
           mkdir -p $GITHUB_WORKSPACE/out/
           
       - name: dbmapfuzzer
