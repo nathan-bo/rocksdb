@@ -56,6 +56,14 @@ jobs:
           key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-db_map_fuzzer-
+            
+      - name: cache files
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/fuzz/db_fuzzer*
+          key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_fuzzer-
 
       
         
@@ -85,12 +93,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: ccache cache files
+      - name: cache files
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
-          key: db_map_fuzzer-${{ github.sha }}
-
+          path: ${{ github.workspace }}/fuzz/db_fuzzer*
+          key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_fuzzer-
+            
+            
 #       - name: Download a Build Artifact
 #         uses: actions/download-artifact@v3.0.0
 #         with:
@@ -112,11 +123,19 @@ jobs:
           ls -alFh $GITHUB_WORKSPACE/fuzz
           ls -alFh $GITHUB_WORKSPACE/out
           
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.0
+      - name: cache files
+        uses: actions/cache@v2
         with:
-          name: db_fuzzer_log
           path: ${{ github.workspace }}/out/db_fuzzer.log
+          key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_fuzzer-log-
+          
+#       - name: Upload a Build Artifact
+#         uses: actions/upload-artifact@v3.1.0
+#         with:
+#           name: db_fuzzer_log
+#           path: ${{ github.workspace }}/out/db_fuzzer.log
 
   db_map_fuzzer:
     runs-on: ubuntu-latest
@@ -158,7 +177,13 @@ jobs:
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_map_fuzzer.log
           ls -alFh $GITHUB_WORKSPACE/out
 
-      
+      - name: cache files
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/out/db_map_fuzzer.log
+          key: ${{ runner.os }}-db_map_fuzzer-log-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_map_fuzzer-log-
       
 #       - name: dbmapfuzzer
 #         run: |
@@ -171,11 +196,11 @@ jobs:
 #           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_map_fuzzer.log
 #           ls -alFh $GITHUB_WORKSPACE/out
       
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: db_map_fuzzer_log
-          path: ${{ github.workspace }}/out/db_map_fuzzer.log
+#       - name: Upload a Build Artifact
+#         uses: actions/upload-artifact@v3.1.0
+#         with:
+#           name: db_map_fuzzer_log
+#           path: ${{ github.workspace }}/out/db_map_fuzzer.log
           
   fuzzer_sum:
     runs-on: ubuntu-18.04
@@ -186,12 +211,28 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.0
+      - name: cache files
+        uses: actions/cache@v2
         with:
-          path: |
-            ${{ github.workspace }}/out/db_map_fuzzer_log
-            ${{ github.workspace }}/out/db_fuzzer_log
+          path: ${{ github.workspace }}/out/db_fuzzer.log
+          key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_fuzzer-log-
+      
+      - name: cache files
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/out/db_map_fuzzer.log
+          key: ${{ runner.os }}-db_map_fuzzer-log-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_map_fuzzer-log-
+
+#       - name: Download a Build Artifact
+#         uses: actions/download-artifact@v3.0.0
+#         with:
+#           path: |
+#             ${{ github.workspace }}/out/db_map_fuzzer_log
+#             ${{ github.workspace }}/out/db_fuzzer_log
       
       - name: fuzzersum
         run: |
@@ -199,6 +240,6 @@ jobs:
           ls -alFh $GITHUB_WORKSPACE
           ls -alFh ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer_log || echo ""
           ls -alFh ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer_log || echo ""
-          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer_log/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
+          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
           echo "------------------------"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer_log/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
