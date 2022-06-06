@@ -53,8 +53,8 @@ jobs:
       - name: cache files
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
-          #key: db_map_fuzzer
+          path: ${{ github.workspace }}/fuzz/db_map_fuzzer*
+          key: db_map_fuzzer
           
 #       - name: Upload db_map_fuzzer Artifact
 #         uses: actions/upload-artifact@v3.1.0
