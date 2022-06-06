@@ -49,21 +49,12 @@ jobs:
            chmod +x prepfuz.sh
            bash -xv prepfuz.sh
            
-           
-      - name: Prepare ccache timestamp
-        id: cache_timestamp
-        shell: cmake -P {0}
-        run: |
-          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-          message("::set-output name=timestamp::${current_date}") 
-          
+                     
       - name: ccache cache files
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/fuzz/db_map_fuzzer
-          key: ${{runner.os}}-db_map_fuzzer-${{steps.cache_timestamp.outputs.timestamp}}
-          restore-keys: |
-            ${{runner.os}}-db_map_fuzzer
+          key: db_map_fuzzer
           
 #       - name: Upload db_map_fuzzer Artifact
 #         uses: actions/upload-artifact@v3.1.0
@@ -95,9 +86,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/fuzz/db_map_fuzzer
-          key: ${{runner.os}}-db_map_fuzzer-${{steps.cache_timestamp.outputs.timestamp}}
-          restore-keys: |
-            ${{runner.os}}-db_map_fuzzer
+          key: db_map_fuzzer
 
 #       - name: Download a Build Artifact
 #         uses: actions/download-artifact@v3.0.0
