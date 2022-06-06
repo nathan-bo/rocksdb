@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_fuzzer
-          path: ${{ github.workspace }}/fuzz/db_fuzzer*
+          path: ${{ github.workspace }}/fuzz/db_fuzzer
       
       - name: Pre-build
         run: |
@@ -88,11 +88,13 @@ jobs:
       - name: dbfuzzer
         run: |
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_fuzzer 2>&1 | sudo tee $GITHUB_WORKSPACE/out/db_fuzzer.log 
+          ls -alFh $GITHUB_WORKSPACE/fuzz
           ls -alFh $GITHUB_WORKSPACE/out
           
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
+          name: db_fuzzer.log
           path: ${{ github.workspace }}/out/db_fuzzer.log
 
   db_map_fuzzer:
@@ -130,6 +132,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
+          name: db_map_fuzzer.log
           path: ${{ github.workspace }}/out/db_map_fuzzer.log
           
   fuzzer_sum:
