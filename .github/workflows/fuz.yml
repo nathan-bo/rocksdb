@@ -49,19 +49,35 @@ jobs:
            chmod +x prepfuz.sh
            bash -xv prepfuz.sh
            
-      - name: Upload db_map_fuzzer Artifact
-        uses: actions/upload-artifact@v3.1.0
+           
+      - name: Prepare ccache timestamp
+        id: cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          message("::set-output name=timestamp::${current_date}") 
+          
+      - name: ccache cache files
+        uses: actions/cache@v2
         with:
-          name: db_map_fuzzer
-          path: |
-             ${{ github.workspace }}/fuzz/db_map_fuzzer*
+          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
+          key: ${{runner.os}}-db_map_fuzzer-${{steps.cache_timestamp.outputs.timestamp}}
+          restore-keys: |
+            ${{runner.os}}-db_map_fuzzer
+          
+#       - name: Upload db_map_fuzzer Artifact
+#         uses: actions/upload-artifact@v3.1.0
+#         with:
+#           name: db_map_fuzzer
+#           path: |
+#              ${{ github.workspace }}/fuzz/db_map_fuzzer*
              
-      - name: Upload db_fuzzer Artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: db_fuzzer
-          path: |
-             ${{ github.workspace }}/fuzz/db_fuzzer*
+#       - name: Upload db_fuzzer Artifact
+#         uses: actions/upload-artifact@v3.1.0
+#         with:
+#           name: db_fuzzer
+#           path: |
+#              ${{ github.workspace }}/fuzz/db_fuzzer*
              
              
              
@@ -75,11 +91,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.0
+      - name: ccache cache files
+        uses: actions/cache@v2
         with:
-          name: db_fuzzer
-          path: ${{ github.workspace }}/fuzz/db_fuzzer
+          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
+          key: ${{runner.os}}-db_map_fuzzer-${{steps.cache_timestamp.outputs.timestamp}}
+          restore-keys: |
+            ${{runner.os}}-db_map_fuzzer
+
+#       - name: Download a Build Artifact
+#         uses: actions/download-artifact@v3.0.0
+#         with:
+#           name: db_fuzzer
+#           path: ${{ github.workspace }}/fuzz/db_fuzzer
       
       - name: Pre-build
         run: |
