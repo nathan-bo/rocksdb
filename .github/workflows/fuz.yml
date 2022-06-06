@@ -52,8 +52,10 @@ jobs:
       - name: cache files
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/fuzz/db_map_fuzzer*
-          key: db_map_fuzzer-${{ github.sha }}
+          path: ${{ runner.os }}-${{ github.workspace }}/fuzz/db_map_fuzzer*
+          key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_map_fuzzer-
 
       
         
@@ -126,16 +128,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.0
-        with:
-          name: db_map_fuzzer
-          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
+#       - name: Download a Build Artifact
+#         uses: actions/download-artifact@v3.0.0
+#         with:
+#           name: db_map_fuzzer
+#           path: ${{ github.workspace }}/fuzz/db_map_fuzzer
       
       - name: Pre-build
         run: |
           apt update && apt install -y sudo libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
           mkdir -p $GITHUB_WORKSPACE/out/
+          
+      - name: cache files
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.os }}-${{ github.workspace }}/fuzz/db_map_fuzzer*
+          key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_map_fuzzer-
           
       - name: dbmapfuzzer
         run: |
