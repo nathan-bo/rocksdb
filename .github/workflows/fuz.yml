@@ -87,6 +87,10 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/out
       - name: dbfuzzer
         run: |
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
+          sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer"
+          chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer
+          whoami
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_fuzzer 2>&1 | sudo tee $GITHUB_WORKSPACE/out/db_fuzzer.log 
           ls -alFh $GITHUB_WORKSPACE/fuzz
           ls -alFh $GITHUB_WORKSPACE/out
