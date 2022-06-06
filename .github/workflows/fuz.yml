@@ -152,13 +152,13 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           path: |
-            ${{ github.workspace }}/out/db_map_fuzzer_log
-            ${{ github.workspace }}/out/db_fuzzer_log
+            ${{ github.workspace }}/out/db_map_fuzzer.log
+            ${{ github.workspace }}/out/db_fuzzer.log
       
       - name: fuzzersum
         run: |
           ls -alFh $GITHUB_WORKSPACE/out
           ls -alFh $GITHUB_WORKSPACE
-          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer_log/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
+          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
           echo "------------------------"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer_log/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
