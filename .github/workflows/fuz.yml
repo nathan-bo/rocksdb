@@ -237,9 +237,7 @@ jobs:
       - name: fuzzersum
         run: |
           ls -alFh $GITHUB_WORKSPACE/out
-          ls -alFh $GITHUB_WORKSPACE
-          ls -alFh ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer_log || echo ""
-          ls -alFh ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer_log || echo ""
+          echo "------------------------"
           tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
           echo "------------------------"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
