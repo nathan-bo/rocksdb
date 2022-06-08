@@ -90,17 +90,7 @@ jobs:
     continue-on-error: true
     needs: [fuzz-build]
       
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: cache files
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/fuzz/db_fuzzer*
-          key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-db_fuzzer-
-            
+    steps:  
             
 #       - name: Download a Build Artifact
 #         uses: actions/download-artifact@v3.0.0
@@ -112,6 +102,17 @@ jobs:
         run: |
           apt update && apt install -y libtool sudo gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4
           mkdir -p $GITHUB_WORKSPACE/out
+          
+      - uses: actions/checkout@v3
+      
+      - name: cache files
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/fuzz/db_fuzzer*
+          key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-db_fuzzer-
+          
       - name: dbfuzzer
         run: |
           ls -alFh $GITHUB_WORKSPACE/fuzz
@@ -120,6 +121,7 @@ jobs:
           chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer
           whoami
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_fuzzer 2>&1 | sudo tee $GITHUB_WORKSPACE/out/db_fuzzer.log 
+          cat $GITHUB_WORKSPACE/out/db_fuzzer.log
           ls -alFh $GITHUB_WORKSPACE/fuzz
           ls -alFh $GITHUB_WORKSPACE/out
           
@@ -175,6 +177,7 @@ jobs:
           whoami
           ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_map_fuzzer.log
+          cat $GITHUB_WORKSPACE/out/db_map_fuzzer.log
           ls -alFh $GITHUB_WORKSPACE/out
 
       - name: cache files
