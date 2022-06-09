@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:latest
+      image: alpine:3.14
 
     steps:
       - uses: actions/checkout@v3
