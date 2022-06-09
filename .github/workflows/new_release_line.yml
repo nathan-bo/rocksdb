@@ -14,8 +14,8 @@ jobs:
 
       - name: Calculate tag
         run: |
-          major="cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1"
-          minor="cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1"
+          major=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
+          minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           echo "$major+'.'+$minor+'dev'"
 
       - name: Run a multi-line script
