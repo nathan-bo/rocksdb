@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:18.04
+      image: ubuntu:latest
 
     steps:
       - uses: actions/checkout@v3
