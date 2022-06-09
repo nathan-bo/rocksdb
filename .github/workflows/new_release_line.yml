@@ -21,7 +21,7 @@ jobs:
           current_version="$major.$minor.dev"
           echo $current_version
           sed -i -e 's/SPEEDB_MAJOR.*/SPEEDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
-          sed -i -e 's/SPEEDB_MINOR.*/SPEEDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
+          sed -i -e 's/SPEEDB_MINOR.*/SPEEDB_MINOR ${{ env.minor }}+1/' include/rocksdb/version.h
           cat include/rocksdb/version.h
 
       - name: Create new release branch
