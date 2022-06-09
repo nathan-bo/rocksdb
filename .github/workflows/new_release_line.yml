@@ -22,8 +22,8 @@ jobs:
           echo "minor=$minor" >> $GITHUB_ENV
           current_version="$major.$minor.dev"
           echo $current_version
-          sed -i -e 's/SPEEDB_MAJOR.*/SPEEDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
-          sed -i -e 's/SPEEDB_MINOR.*/SPEEDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
+          sed -i -e 's/ROCKSDB_MAJOR.*/ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
+          sed -i -e 's/ROCKSDB_MINOR.*/ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
           cat include/rocksdb/version.h
 
       - name: Create new release branch
