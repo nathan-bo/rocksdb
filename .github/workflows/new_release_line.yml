@@ -25,6 +25,6 @@ jobs:
 
       - name: Update version.h
         run: |
-          sed -i -e 's/ROCKSDB_MAJOR.*/ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
-          sed -i -e 's/ROCKSDB_MINOR.*/ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
+          sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
+          sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
           cat include/rocksdb/version.h
