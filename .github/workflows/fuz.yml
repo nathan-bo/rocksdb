@@ -130,8 +130,8 @@ jobs:
         with:
           path: ${{ github.workspace }}/out/db_fuzzer.log
           key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-db_fuzzer-log-
+#           restore-keys: |
+#             ${{ runner.os }}-db_fuzzer-log-
           
 #       - name: Upload a Build Artifact
 #         uses: actions/upload-artifact@v3.1.0
