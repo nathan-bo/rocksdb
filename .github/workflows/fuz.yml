@@ -50,7 +50,7 @@ jobs:
            bash -xv prepfuz.sh
                                 
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/fuzz/db_map_fuzzer*
           key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
@@ -58,7 +58,7 @@ jobs:
             ${{ runner.os }}-db_map_fuzzer-
             
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/fuzz/db_fuzzer*
           key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
@@ -106,7 +106,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/fuzz/db_fuzzer*
           key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
@@ -126,7 +126,7 @@ jobs:
           
           
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/out/db_fuzzer.log
           key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
@@ -161,7 +161,7 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/out/
           
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/fuzz/db_map_fuzzer*
           key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
@@ -181,7 +181,7 @@ jobs:
           ls -alFh $GITHUB_WORKSPACE/out
 
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/out/db_map_fuzzer.log
           key: ${{ runner.os }}-db_map_fuzzer-log-${{ github.sha }}
@@ -215,7 +215,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/out/db_fuzzer.log
           key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
@@ -223,7 +223,7 @@ jobs:
             ${{ runner.os }}-db_fuzzer-log-
       
       - name: cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/out/db_map_fuzzer.log
           key: ${{ runner.os }}-db_map_fuzzer-log-${{ github.sha }}
