@@ -31,6 +31,6 @@ jobs:
           
       - name: Create release branch
         run: |
-          new_branch="release/{{ env.major }}.{{ env.minor }}"
+          new_branch="release/${{ env.major }}.${{ env.minor }}"
           echo $new_branch
           #git checkout -b 
