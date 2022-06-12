@@ -36,12 +36,16 @@ jobs:
         run: |
           if [ -z ${{ inputs.new_branch_major }} ]; then
             git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
             cat include/rocksdb/version.h
             git commit -am "updated version.h version"
             git push
           else
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ inputs.new_branch_minor }}/' include/rocksdb/version.h
