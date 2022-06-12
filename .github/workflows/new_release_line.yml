@@ -51,7 +51,7 @@ jobs:
 
       - name: Update version.h
         run: |
-          if [ -z ${{ inputs.new_branch_major }} ]; then
+          if [ -z "${{ inputs.new_branch_major }}" ]; then
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             git config user.name "GitHub Actions Bot"
             git config user.email "<>"
