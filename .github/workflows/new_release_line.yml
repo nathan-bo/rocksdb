@@ -35,6 +35,9 @@ jobs:
       - name: Create release branch
         run: |
           if [ -z "${{ inputs.new_branch_major }}" ]; then
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
             echo "empty"
             new_branch="release/${{ env.major }}.${{ env.minor }}"
             echo $new_branch
@@ -42,6 +45,9 @@ jobs:
             git checkout -b $new_branch
             git push origin $new_branch
           else
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
             echo "not empty"
             new_branch="release/${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             echo $new_branch
