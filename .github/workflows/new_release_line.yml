@@ -44,7 +44,7 @@ jobs:
             echo $new_branch
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
-            git push origin $new_branch
+            git push -u origin $new_branch
           else
             git pull
             echo "not empty"
@@ -52,7 +52,7 @@ jobs:
             echo $new_branch
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
-            git push origin $new_branch
+            git push -u origin $new_branch
           fi
 
 
