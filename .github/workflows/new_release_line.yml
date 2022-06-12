@@ -22,10 +22,9 @@ jobs:
 
       - name: Calculate tag
         run: |
-          git config --global --add safe.directory /__w/rocksdb/rocksdb
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          git config --global --add safe.directory /__w/rocksdb/rocksdb
           git pull
           major=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
@@ -34,6 +33,7 @@ jobs:
           echo $minor
           echo "major=$major" >> $GITHUB_ENV
           echo "minor=$minor" >> $GITHUB_ENV
+          echo "minor=$new_minor" >> $GITHUB_ENV
           current_version="$major.$minor.dev"
           echo $current_version
       
@@ -43,14 +43,12 @@ jobs:
             echo "empty"
             new_branch="release/${{ env.major }}.${{ env.minor }}"
             echo $new_branch
-            git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
             git push -u origin $new_branch
           else
             echo "not empty"
             new_branch="release/${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             echo $new_branch
-            git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
             git push -u origin $new_branch
           fi
@@ -69,11 +67,10 @@ jobs:
             git commit -am "updated version.h version"
             git push
           else
+            new_minor=$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
             git checkout main
             git tag "v${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             git push --tags
-            new_major=n$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
-            echo $new_major
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ inputs.new_branch_minor }}/' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_PATCH.*/#define ROCKSDB_PATCH dev/' include/rocksdb/version.h
