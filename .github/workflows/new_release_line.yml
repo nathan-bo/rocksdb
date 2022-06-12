@@ -31,31 +31,7 @@ jobs:
           echo "minor=$minor" >> $GITHUB_ENV
           current_version="$major.$minor.dev"
           echo $current_version
-
-      - name: Update version.h
-        run: |
-          if [ -z ${{ inputs.new_branch_major }} ]; then
-            git config --global --add safe.directory /__w/rocksdb/rocksdb
-            git config user.name "GitHub Actions Bot"
-            git config user.email "<>"
-            sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
-            sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
-            cat include/rocksdb/version.h
-            git commit -am "updated version.h version"
-            git push
-            git checkout HEAD~1
-          else
-            git config user.name "GitHub Actions Bot"
-            git config user.email "<>"
-            git config --global --add safe.directory /__w/rocksdb/rocksdb
-            sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
-            sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ inputs.new_branch_minor }}/' include/rocksdb/version.h
-            cat include/rocksdb/version.h
-            git commit -am "updated version.h version"
-            git push
-            git checkout HEAD~1
-          fi
-          
+      
       - name: Create release branch
         run: |
           if [ -z ${{ inputs.new_manual_branch }} ]; then
@@ -71,3 +47,29 @@ jobs:
             git checkout -b $new_branch
             git push origin $new_branch
           fi
+
+
+      - name: Update version.h
+        run: |
+          if [ -z ${{ inputs.new_branch_major }} ]; then
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
+            git checkout main
+            sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
+            sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
+            cat include/rocksdb/version.h
+            git commit -am "updated version.h version"
+            git push
+          else
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<>"
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git checkout main
+            sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
+            sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ inputs.new_branch_minor }}/' include/rocksdb/version.h
+            cat include/rocksdb/version.h
+            git commit -am "updated version.h version"
+            git push
+          fi
+          
