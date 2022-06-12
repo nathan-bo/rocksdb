@@ -43,6 +43,7 @@ jobs:
             cat include/rocksdb/version.h
             git commit -am "updated version.h version"
             git push
+            git checkout HEAD~1
           else
             git config user.name "GitHub Actions Bot"
             git config user.email "<>"
@@ -52,6 +53,7 @@ jobs:
             cat include/rocksdb/version.h
             git commit -am "updated version.h version"
             git push
+            git checkout HEAD~1
           fi
           
       - name: Create release branch
