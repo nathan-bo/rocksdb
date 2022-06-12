@@ -59,7 +59,7 @@ jobs:
         run: |
           if [ -z "${{ inputs.new_branch_major }}" ]; then
             git checkout main
-            git tag ${{ env.minor }}
+            git tag "v${{ env.major }}.${{ env.minor }}"
             git push --tags
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ env.new_minor }}/' include/rocksdb/version.h
@@ -68,7 +68,7 @@ jobs:
             git push
           else
             git checkout main
-            git tag ${{ env.minor }}
+            git tag "v${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             git push --tags
             new_major=n$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
             echo $new_major
