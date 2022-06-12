@@ -46,7 +46,6 @@ jobs:
             git checkout -b $new_branch
             git push -u origin $new_branch
           else
-            git pull
             echo "not empty"
             new_branch="release/${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             echo $new_branch
