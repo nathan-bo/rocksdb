@@ -2,6 +2,10 @@ name: New Release Line
 
 on:
   workflow_dispatch:
+    inputs:
+      new_manual_branch:
+        description: 'New branch to be created'
+
 
 jobs:
   build:
@@ -33,8 +37,14 @@ jobs:
           
       - name: Create release branch
         run: |
-          new_branch="release/${{ env.major }}.${{ env.minor }}"
-          echo $new_branch
-          git config --global --add safe.directory /__w/rocksdb/rocksdb
-          git checkout -b $new_branch
-          git push origin $new_branch
+          if [ -z ${{ inputs.new_manual_branch }} ]; then
+            new_branch="release/${{ env.major }}.${{ env.minor }}"
+            echo $new_branch
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git checkout -b $new_branch
+            git push origin $new_branch
+          else
+            echo ${{ inputs.new_manual_branch }}
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
+            git checkout -b ${{ inputs.new_manual_branch }}
+            git push origin ${{ inputs.new_manual_branch }}
