@@ -25,7 +25,6 @@ jobs:
           git config --global --add safe.directory /__w/rocksdb/rocksdb
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          git config --global --add safe.directory /__w/rocksdb/rocksdb
           git pull
           major=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
@@ -69,12 +68,12 @@ jobs:
             git push
           else
             git checkout main
-            new_minor=$(echo ${{ inputs.new_branch_major }} + 1 | bc)
+            new_minor=$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
             echo $new_minor
             git tag "v${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             git push --tags
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
-            sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR $new_minor/' include/rocksdb/version.h
+            sed -i -e 's+#define ROCKSDB_MINOR.*+#define ROCKSDB_MINOR $new_minor+g' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_PATCH.*/#define ROCKSDB_PATCH dev/' include/rocksdb/version.h
             cat include/rocksdb/version.h
             git commit -am "updated version.h version"
