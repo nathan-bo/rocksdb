@@ -46,10 +46,6 @@ jobs:
             git checkout -b $new_branch
             git push -u origin $new_branch
           else
-            new_minor=$(echo ${{ inputs.new_branch_minor }} + 1 )
-            echo $new_minor
-            echo "new_minor=$new_minor" >> $GITHUB_ENV
-            echo $new_minor
             echo "minor=$new_minor" >> $GITHUB_ENV
             echo "not empty"
             new_branch="release/${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
