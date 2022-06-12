@@ -121,17 +121,17 @@ jobs:
           chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer
           whoami
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_fuzzer.log 
-          cat $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
-          ls -alFh $GITHUB_WORKSPACE/fuzz
-          ls -alFh $GITHUB_WORKSPACE/out
+#          cat $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
+#          ls -alFh $GITHUB_WORKSPACE/fuzz
+#          ls -alFh $GITHUB_WORKSPACE/out
           
       - name: cache files
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/out/db_fuzzer.log
           key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_fuzzer-log-
+          restore-keys: |
+            ${{ runner.os }}-db_fuzzer-log-
           
 #       - name: Upload a Build Artifact
 #         uses: actions/upload-artifact@v3.1.0
