@@ -34,7 +34,7 @@ jobs:
       
       - name: Create release branch
         run: |
-          if [ -z ${{ inputs.new_manual_branch }} ]; then
+          if [ -z "${{ inputs.new_manual_branch }}" ]; then
             new_branch="release/${{ env.major }}.${{ env.minor }}"
             echo $new_branch
             git config --global --add safe.directory /__w/rocksdb/rocksdb
