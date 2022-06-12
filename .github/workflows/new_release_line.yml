@@ -34,7 +34,7 @@ jobs:
       
       - name: Create release branch
         run: |
-          if [ -z "${{ inputs.new_manual_branch }}" ]; then
+          if [ -z "${{ inputs.new_branch_major }}" ]; then
             echo "empty"
             new_branch="release/${{ env.major }}.${{ env.minor }}"
             echo $new_branch
@@ -43,7 +43,7 @@ jobs:
             git push origin $new_branch
           else
             echo "not empty"
-            new_branch="release/${{ inputs.new_manual_branch }}"
+            new_branch="release/${{ inputs.new_branch_major }}"
             echo $new_branch
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
