@@ -28,12 +28,12 @@ jobs:
           git pull
           major=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
-          minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
+          patch=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           new_minor=$(echo $minor + 1 | bc)
           echo $minor
           echo "major=$major" >> $GITHUB_ENV
           echo "minor=$minor" >> $GITHUB_ENV
-          echo "minor=$new_minor" >> $GITHUB_ENV
+          echo "new_minor=$new_minor" >> $GITHUB_ENV
           current_version="$major.$minor.dev"
           echo $current_version
       
@@ -46,6 +46,10 @@ jobs:
             git checkout -b $new_branch
             git push -u origin $new_branch
           else
+            new_minor=$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
+            echo "new_minor=$new_minor" >> $GITHUB_ENV
+            echo $new_minor
+            echo "minor=$new_minor" >> $GITHUB_ENV
             echo "not empty"
             new_branch="release/${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             echo $new_branch
@@ -67,7 +71,6 @@ jobs:
             git commit -am "updated version.h version"
             git push
           else
-            new_minor=$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
             git checkout main
             git tag "v${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             git push --tags
