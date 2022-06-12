@@ -44,7 +44,7 @@ jobs:
             git checkout -b $new_branch
             git push origin $new_branch
           else
-            new_branch="release/${{ inputs.new_manual_branch }}
+            new_branch="release/${{ inputs.new_manual_branch }}"
             echo $new_branch
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
