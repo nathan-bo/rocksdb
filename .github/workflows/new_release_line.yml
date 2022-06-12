@@ -43,7 +43,7 @@ jobs:
             git push origin $new_branch
           else
             echo "not empty"
-            new_branch="release/${{ inputs.new_branch_major }}"
+            new_branch="release/${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             echo $new_branch
             git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout -b $new_branch
