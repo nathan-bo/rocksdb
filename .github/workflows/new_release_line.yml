@@ -73,7 +73,7 @@ jobs:
             git tag "v${{ inputs.new_branch_major }}.${{ inputs.new_branch_minor }}"
             git push --tags
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
-            sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${new_minor}/g' include/rocksdb/version.h
+            sed -i -e "s/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR $new_minor/g" include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_PATCH.*/#define ROCKSDB_PATCH dev/' include/rocksdb/version.h
             cat include/rocksdb/version.h
             git commit -am "updated version.h version"
