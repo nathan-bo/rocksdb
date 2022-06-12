@@ -35,5 +35,6 @@ jobs:
         run: |
           new_branch="release/${{ env.major }}.${{ env.minor }}"
           echo $new_branch
+          git config --global --add safe.directory /__w/rocksdb/rocksdb
           git checkout -b $new_branch
           git push origin $new_branch
