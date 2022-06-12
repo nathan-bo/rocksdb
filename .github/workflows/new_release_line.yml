@@ -33,4 +33,5 @@ jobs:
         run: |
           new_branch="release/${{ env.major }}.${{ env.minor }}"
           echo $new_branch
-          #git checkout -b 
+          git checkout -b $new_branch
+          git push origin $new_branch
