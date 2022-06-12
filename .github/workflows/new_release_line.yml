@@ -28,3 +28,9 @@ jobs:
           sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ env.major }}/' include/rocksdb/version.h
           sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ env.minor }}/' include/rocksdb/version.h
           cat include/rocksdb/version.h
+          
+      - name: Create release branch
+        run: |
+          new_branch="release/{{ env.major }}.{{ env.minor }}
+          echo $new_branch
+          #git checkout -b 
