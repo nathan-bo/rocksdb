@@ -12,7 +12,7 @@
 // NOTE: in 'main' development branch, this should be the *next*
 // minor or major version number planned for release.
 #define ROCKSDB_MAJOR 7
-#define ROCKSDB_MINOR 29
+#define ROCKSDB_MINOR 
 #define ROCKSDB_PATCH dev
 
 // Do not use these. We made the mistake of declaring macros starting with
