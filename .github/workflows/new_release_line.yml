@@ -64,10 +64,15 @@ jobs:
             git commit -am "updated version.h version"
             git push
           else
+          if [ -z "${{ inputs.new_branch_major }}" ]; then
+            git config --global --add safe.directory /__w/rocksdb/rocksdb
             git config user.name "GitHub Actions Bot"
             git config user.email "<>"
-            git config --global --add safe.directory /__w/rocksdb/rocksdb
             git checkout main
+            git tag ${{ env.minor }}
+            git push --tags
+            new_major=n$(echo ${{ inputs.new_branch_minor }} + 1 | bc)
+            echo $new_major
             sed -i -e 's/#define ROCKSDB_MAJOR.*/#define ROCKSDB_MAJOR ${{ inputs.new_branch_major }}/' include/rocksdb/version.h
             sed -i -e 's/#define ROCKSDB_MINOR.*/#define ROCKSDB_MINOR ${{ inputs.new_branch_minor }}/' include/rocksdb/version.h
             cat include/rocksdb/version.h
