@@ -88,12 +88,13 @@ jobs:
     - name: run e2e-test 
       run: echo "~~~ Running e2e-test ~~~"
       
-  sanity:
+  Sanity:
     needs: [Release]
     uses: speedb-io/rocksdb/.github/workflows/sanity_check.yml@main
 
 
   UpdateVer:
+    needs: [Sanity]
     runs-on: ubuntu-latest
     steps:
     
