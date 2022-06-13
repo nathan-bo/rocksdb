@@ -7,117 +7,87 @@ jobs:
   
   Release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: verify build
+            command: cmake ..  -GNinja
+          - name: optimized build
+            command: cmake .. -DCMAKE_BUILD_TYPE=Release  -GNinja
+          - mame: clang build
+            command: CC=clang CXX=clang++ cmake ..  -GNinja
     container:
       image: alpine:3.14
 
-
     steps:
+    - name: Pre-build
+      run: |
+        env
+        rm -rf /usr/share/dotnet || echo ""
+        df -h
+        apk add git bash python3 py3-pip clang clang-extra-tools shellcheck gcc g++ cmake ninja ccache \
+        openjdk10 gflags-dev snappy-dev lz4-dev bzip2-dev zstd-dev zlib-dev linux-headers openssh-client tar
+        python3 -m pip install lint-diffs flake8
+    - name: Checkout
+      uses: actions/checkout@v2 
+      
+      
+    - name: Prepare ccache timestamp
+      id: ccache_cache_timestamp
+      shell: cmake -P {0}
+      run: |
+        string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+        message("::set-output name=timestamp::${current_date}")
         
-      - name: Checkout
-        uses: actions/checkout@v3
         
-      - name: Verify Branch
-        run: |
-          env
-          echo "~~~~ Verifying Branch ~~~~"
+    - name: ccache cache files
+      uses: actions/cache@v2
+      with:
+        path: ~/.ccache
+        key: ${{runner.os}}-ccache-${{steps.ccache_cache_timestamp.outputs.timestamp}}
+        restore-keys: |
+          ${{runner.os}}-ccache-
+        
+      
+    - name: ${{ matrix.name }}
+      run: |
+        df -h
+        ls /etc/apk/world
+        git config --global --add safe.directory $GITHUB_WORKSPACE
+        if [ -d "$GITHUB_WORKSPACE/build" ]; then
+          echo >&2 "error: the build directory should not exist" && false NIK 
+        fi
+        if [ -d "~/.ccache" ]; then
+          echo "Already exists"
+        else
+          mkdir -p ~/.ccache
+          ls ~ | grep cache || echo ""
+          touch ~/.ccache/ccache.txt
+          echo "aaa" > ~/.ccache/ccache.txt
+          ls ~/.ccache
+          cat ~/.ccache/ccache.txt
+        fi
+        mkdir -p "$GITHUB_WORKSPACE/build"
+        cd "$GITHUB_WORKSPACE/build"
+        export "CCACHE_BASEDIR=$HOME"
+        export "CCACHE_DIR=$HOME/.ccache"
+        export "CCACHE_COMPILERCHECK=content"
+        ${{ matrix.command }} -DWITH_GFLAGS=1 \
+        -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
+        -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
+        -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
+        -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
+        ninja
+        
+  sanity:
+    needs: [Release]
+    uses: speedb-io/rocksdb/.github/workflows/sanity_check.yml@main
 
-          if [[ $GITHUB_REF_NAME =~ release/.* ]]; then
-            echo "MATCH"
-          else
-            echo "No Match"
-          fi
-          echo "~~~~ Verifying Branch ~~~~"
-      
-      - name: Calculate new tag
-        run:  echo "~~~~ Calculating New Tag ~~~~"
-      
-      - name: Update version.h
-        run:  echo "~~~~ Updating version.h ~~~~"
-      
-      - name: Pre-build
-        run: |
-          apk add git python3 py3-pip clang clang-extra-tools shellcheck gcc g++ cmake ninja ccache \
-          openjdk10 gflags-dev snappy-dev lz4-dev bzip2-dev zstd-dev zlib-dev linux-headers openssh-client
-          apk add --no-cache tar
-          python3 -m pip install lint-diffs flake8
-      
-      - name: Verify Build
-        run: |
-          echo "~~~~ Running verify build ~~~~"
-          
-          if [ -d "$GITHUB_WORKSPACE/build" ]; then
-            echo >&2 "error: the build directory should not exist" && false NIK 
-          fi
-          mkdir -p "$GITHUB_WORKSPACE/build"
-          cd "$GITHUB_WORKSPACE/build"
-          export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
-          export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
-          export "CCACHE_COMPILERCHECK=content"
-          
-          cmake .. -GNinja -DWITH_GFLAGS=1 \
-          -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
-          -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
-          -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
-          -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
-          
-          ninja
-          
-          
-      - name: Optimized Build
-        run: |
-          echo "~~~~ Running Optimized Build ~~~~"
 
-          if [ -d "$GITHUB_WORKSPACE/build" ]; then
-            rm -rf $GITHUB_WORKSPACE/build
-          fi
-          mkdir -p "$GITHUB_WORKSPACE/build"
-          cd "$GITHUB_WORKSPACE/build"
-          export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
-          export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
-          export "CCACHE_COMPILERCHECK=content"
-
-          cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja -DWITH_GFLAGS=1 \
-          -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
-          -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
-          -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
-          -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
-
-          ninja
-          
-      - name: Clang Build
-        run: |
-
-          echo "~~~~ Running clang build ~~~~"
-          
-          if [ -d "$GITHUB_WORKSPACE/build" ]; then
-            rm -rf $GITHUB_WORKSPACE/build
-          fi
-          
-          mkdir -p "$GITHUB_WORKSPACE/build"
-          cd "$GITHUB_WORKSPACE/build"
-          export "CCACHE_BASEDIR=$GITHUB_WORKSPACE"
-          export "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache"
-          export "CCACHE_COMPILERCHECK=content"
-          
-          CC=clang CXX=clang++ cmake .. -GNinja -DWITH_GFLAGS=1 \
-          -DWITH_ZLIB=1 -DWITH_SNAPPY=1 -DWITH_BZ2=1 -DWITH_LZ4=1 -DWITH_ZSTD=1 \
-          -DWITH_JNI=1 -DJAVA_HOME=/usr/lib/jvm/default-jvm \
-          -DWITH_BENCHMARK_TOOLS=1 -DWITH_CORE_TOOLS=1 -DWITH_TOOLS=1 \
-          -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
-          
-          ninja
-          
-      - name: Test
-        run:  echo "~~~~ Running Tests ~~~~"
-      
-      - name: Publish
-        run:  echo "~~~~ Publishing ~~~~"
-      
-      - name: Git Reset
-        run:  echo "~~~~ Resetting Git ~~~~"
-      
-      - name: Git Tag
-        run:  echo "~~~~ Tagging ~~~~"
-      
-      - name: Git Push tag
-        run:  echo "~~~~ Pushing Tag ~~~~"
+  UpdateVer:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Update version.h
+      run: |
+        env
