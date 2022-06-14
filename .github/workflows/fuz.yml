@@ -48,32 +48,13 @@ jobs:
            cat prepfuz.sh     
            chmod +x prepfuz.sh
            bash -xv prepfuz.sh
-                                
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/fuzz/db_map_fuzzer*
-#           key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_map_fuzzer-
-            
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/fuzz/db_fuzzer*
-#           key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_fuzzer-
-
-      
-        
+           
       - name: Upload db_map_fuzzer Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
           name: db_map_fuzzer
           path: |
              ${{ github.workspace }}/fuzz/db_map_fuzzer*
-          retention-days: 1
              
       - name: Upload db_fuzzer Artifact
         uses: actions/upload-artifact@v3.1.0
@@ -81,7 +62,6 @@ jobs:
           name: db_fuzzer
           path: |
              ${{ github.workspace }}/fuzz/db_fuzzer*
-          retention-days: 1
              
              
              
@@ -92,56 +72,28 @@ jobs:
     continue-on-error: true
     needs: [fuzz-build]
       
-    steps:  
-            
+    steps:
+      - uses: actions/checkout@v3
+      
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_fuzzer
-          path: |
-            ${{ github.workspace }}/fuzz/db_fuzzer*
+          path: ${{ github.workspace }}/fuzz/db_fuzzer*
       
       - name: Pre-build
         run: |
-          apt update && apt install -y libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 sudo
+          apt update && apt install -y libtool sudo gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4
           mkdir -p $GITHUB_WORKSPACE/out
-          
-      - uses: actions/checkout@v3
-      
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/fuzz/db_fuzzer*
-#           key: ${{ runner.os }}-db_fuzzer-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_fuzzer-
-          
       - name: dbfuzzer
         run: |
-          ls -alFh $GITHUB_WORKSPACE/fuzz/
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
-          sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer"
-          chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer
-          whoami
-          ASAN_OPTIONS=detect_odr_violation=0 /builds/speedb/speedb/fuzz/db_fuzzer/db_fuzzer 2>&1 | tee /builds/speedb/speedb/out/db_fuzzer.log
-          echo "Printing logs:"
-          cat $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
-          
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/out/db_fuzzer.log
-#           key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_fuzzer-log-
+          sudo ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer 2>&1 | sudo tee $GITHUB_WORKSPACE/out/db_fuzzer.log 
+          ls -l $GITHUB_WORKSPACE/out/
           
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: db_fuzzer_log
-          path: |
-            ${{ github.workspace }}/out/db_fuzzer.log
-          retention-days: 1
+          path: ${{ github.workspace }}/out/db_fuzzer.log
 
   db_map_fuzzer:
     runs-on: ubuntu-latest
@@ -151,125 +103,54 @@ jobs:
     needs:  [fuzz-build]
     
     steps:
-    
+      - uses: actions/checkout@v3
+      
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_map_fuzzer
-          path: |
-            ${{ github.workspace }}/fuzz/db_map_fuzzer*
-    
-      - uses: actions/checkout@v3
-      
-#       - name: Download a Build Artifact
-#         uses: actions/download-artifact@v3.0.0
-#         with:
-#           name: db_map_fuzzer
-#           path: ${{ github.workspace }}/fuzz/db_map_fuzzer
+          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
       
       - name: Pre-build
         run: |
           apt update && apt install -y sudo libtool gettext pkg-config libsnappy-dev libzstd-dev liblz4-dev binutils m4 
           mkdir -p $GITHUB_WORKSPACE/out/
           
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/fuzz/db_map_fuzzer*
-#           key: ${{ runner.os }}-db_map_fuzzer-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_map_fuzzer-
-      
       - name: dbmapfuzzer
         run: |
           ls -l $GITHUB_WORKSPACE/out/
-          ls -alFh $GITHUB_WORKSPACE
-          ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
           sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer"
           chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer
           whoami
           ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer
-          ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_map_fuzzer.log
-          echo "Printing logs:"
-          cat $GITHUB_WORKSPACE/out/db_map_fuzzer.log || echo ""
-          ls -alFh $GITHUB_WORKSPACE/out
-
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/out/db_map_fuzzer.log
-#           key: ${{ runner.os }}-db_map_fuzzer-log-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_map_fuzzer-log-
-      
-#       - name: dbmapfuzzer
-#         run: |
-#           ls -l $GITHUB_WORKSPACE/out/
-#           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
-#           sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer"
-#           chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer
-#           whoami
-#           ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer
-#           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_map_fuzzer.log
-#           ls -alFh $GITHUB_WORKSPACE/out
+          ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer 2>&1 | tee $GITHUB_WORKSPACE/out/db_map_fuzzer.log 
       
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
           name: db_map_fuzzer_log
-          path: |
-            ${{ github.workspace }}/out/db_map_fuzzer.log
-          retention-days: 1
+          path: ${{ github.workspace }}/out/db_map_fuzzer.log
           
   fuzzer_sum:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container:
-      image:  ubuntu:18.04
+      image:  alpine:3.14
     needs: [db_map_fuzzer, db_fuzzer]
       
     steps:
       - uses: actions/checkout@v3
       
-#       - name: Download a Build Artifact
-#         uses: actions/download-artifact@v3.0.0
-#         with:
-#           name: db_map_fuzzer_log
-#           path: ${{ github.workspace }}/fuzz/db_map_fuzzer.log
-          
-#       - name: Download a Build Artifact
-#         uses: actions/download-artifact@v3.0.0
-#         with:
-#           name: db_fuzzer_log
-#           path: ${{ github.workspace }}/fuzz/db_fuzzer.log
-      
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/out/db_fuzzer.log
-#           key: ${{ runner.os }}-db_fuzzer-log-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_fuzzer-log-
-      
-#       - name: cache files
-#         uses: actions/cache@v3
-#         with:
-#           path: ${{ github.workspace }}/out/db_map_fuzzer.log
-#           key: ${{ runner.os }}-db_map_fuzzer-log-${{ github.sha }}
-#           restore-keys: |
-#             ${{ runner.os }}-db_map_fuzzer-log-
-
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
         with:
           path: |
-            ${{ github.workspace }}/out/db_map_fuzzer_log
-            ${{ github.workspace }}/out/db_fuzzer_log
+            ${{ github.workspace }}/out/db_map_fuzzer.log
+            ${{ github.workspace }}/out/db_fuzzer.log
       
       - name: fuzzersum
         run: |
           ls -alFh $GITHUB_WORKSPACE/out
-          echo "---------- DB Map Fuzzer Logs--------------"
           tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer_log/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
-          echo "---------- DB Fuzzer Logs --------------"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer_log/db_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
+          echo "------------------------"
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo ""
