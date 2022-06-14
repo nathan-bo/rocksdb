@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_fuzzer
-          path: ${{ github.workspace }}/fuzz/db_fuzzer*
+          path: ${{ github.workspace }}/fuzz/db_fuzzer
 
       - name: Pre-build
         run: |
@@ -92,7 +92,7 @@ jobs:
           ls -alFh $GITHUB_WORKSPACE/fuzz
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
           sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer"
-          chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer*/db_fuzzer*
+          chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer
           whoami
           ls -alFh $GITHUB_WORKSPACE/fuzz/db_fuzzer
           ASAN_OPTIONS=detect_odr_violation=0 $GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer 2>&1 | sudo tee $GITHUB_WORKSPACE/out/db_fuzzer.log 
