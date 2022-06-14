@@ -164,6 +164,12 @@ jobs:
       
       - name: fuzzersum
         run: |
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
+          sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer.log/db_map_fuzzer.log"
+          chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer.log/db_map_fuzzer.log
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
+          sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_fuzzer.log/db_fuzzer.log"
+          chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer.log/db_fuzzer.log
           ls -alFh $GITHUB_WORKSPACE/out
           ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer.log
           ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log
