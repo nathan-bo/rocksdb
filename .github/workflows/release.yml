@@ -101,20 +101,25 @@ jobs:
     - name: Update version.h
       run: |
         env
+        echo ~~~~~
         if [ $GITHUB_REF_NAME =~ "release/([0-9]*).([0-9]*)" ]; then
           patch=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           if [ $patch == "dev" ]; then
             new_patch=0
+            echo $new_patch
           else
             new_patch=$(echo $patch + 1 | bc)
+            echo $new_patch
           fi
           sed -i -e "s/#define ROCKSDB_PATCH.*/#define ROCKSDB_PATCH $new_patch/g" include/rocksdb/version.h
-        elif [ $GITHUB_REF_NAME =~ "feature/*" || $GITHUB_REF_NAME =~ "main" ]; then
+        elif [ $GITHUB_REF_NAME =~ "feature/*" ] || [ $GITHUB_REF_NAME =~ "main" ]; then
           patch=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           if [ $patch == "dev" ]; then
             new_patch=0
+            echo $new_patch
           else
             new_patch=$(echo $patch + 1 | bc)
+            echo $new_patch
           fi
         fi
 
