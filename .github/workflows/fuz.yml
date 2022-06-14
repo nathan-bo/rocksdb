@@ -54,14 +54,14 @@ jobs:
         with:
           name: db_map_fuzzer
           path: |
-             ${{ github.workspace }}/fuzz/db_map_fuzzer*
+             ${{ github.workspace }}/fuzz/db_map_fuzzer
              
       - name: Upload db_fuzzer Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
           name: db_fuzzer
           path: |
-             ${{ github.workspace }}/fuzz/db_fuzzer*
+             ${{ github.workspace }}/fuzz/db_fuzzer
              
              
              
