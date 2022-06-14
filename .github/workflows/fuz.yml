@@ -115,7 +115,7 @@ jobs:
           
       - name: dbfuzzer
         run: |
-          ls -alFh $GITHUB_WORKSPACE/fuzz/db_fuzzer
+          ls -alFh $GITHUB_WORKSPACE/fuzz/
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
           sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer"
           chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer/db_fuzzer
@@ -178,7 +178,7 @@ jobs:
         run: |
           ls -l $GITHUB_WORKSPACE/out/
           ls -alFh $GITHUB_WORKSPACE
-          ls -alFh $GITHUB_WORKSPACE/db_map_fuzzer
+          ls -alFh $GITHUB_WORKSPACE/fuzz/db_map_fuzzer
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
           sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer"
           chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer/db_map_fuzzer
