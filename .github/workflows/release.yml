@@ -102,7 +102,7 @@ jobs:
       run: |
         env
         echo ~~~~~
-        if [ $GITHUB_REF_NAME =~ "release/([0-9]*).([0-9]*)" ]; then
+        if [ $GITHUB_REF_NAME =~ "release/*)" ]; then
           patch=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           if [ $patch == 99 ]; then
             new_patch=0
