@@ -96,7 +96,8 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_fuzzer
-          path: ${{ github.workspace }}/fuzz/db_fuzzer
+          path: |
+            ${{ github.workspace }}/fuzz/db_fuzzer*
       
       - name: Pre-build
         run: |
@@ -136,7 +137,8 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: db_fuzzer_log
-          path: ${{ github.workspace }}/out/db_fuzzer.log
+          path: |
+            ${{ github.workspace }}/out/db_fuzzer.log
 
   db_map_fuzzer:
     runs-on: ubuntu-latest
@@ -151,7 +153,8 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
           name: db_map_fuzzer
-          path: ${{ github.workspace }}/fuzz/db_map_fuzzer
+          path: |
+            ${{ github.workspace }}/fuzz/db_map_fuzzer*
     
       - uses: actions/checkout@v3
       
@@ -212,7 +215,8 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: db_map_fuzzer_log
-          path: ${{ github.workspace }}/out/db_map_fuzzer.log
+          path: |
+            ${{ github.workspace }}/out/db_map_fuzzer.log
           
   fuzzer_sum:
     runs-on: ubuntu-latest
