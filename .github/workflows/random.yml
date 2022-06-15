@@ -56,6 +56,6 @@ jobs:
       - name: Run a one-line script
         run: |
           ls -alFh $GITHUB_WORKSPACE
-          ls -alFh $GITHUB_WORKSPACE/out || echo skoot
-          ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log || echo skid
+          ls -alFh /__w/rocksdb/rocksdb/out/db_fuzzer.log || echo skoot
+          ls -alFh /__w/rocksdb/rocksdb/db_fuzzer.log || echo skid
           
