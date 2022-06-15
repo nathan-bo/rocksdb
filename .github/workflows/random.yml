@@ -24,7 +24,7 @@ jobs:
       - name: Run a one-line script
         run: |
           mkdir -p $GITHUB_WORKSPACE/out
-          echo "Hello, world!" > $GITHUB_WORKSPACE/out
+          echo "Hello, world!" > $GITHUB_WORKSPACE/out/db_fuzzer.log
           
 
       - name: Upload a Build Artifact
