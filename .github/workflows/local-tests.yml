@@ -48,5 +48,6 @@ jobs:
 
       - name: Run a one-line script
         run: |
-          ls -alFh $GITHUB_WORKSPACE
-          ls -alFh $GITHUB_WORKSPACE/out
+          mkdir -p $GITHUB_WORKSPACE/out/
+          ls -alFh $GITHUB_WORKSPACE/
+          ls -alFh $GITHUB_WORKSPACE/out/
