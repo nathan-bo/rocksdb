@@ -162,6 +162,7 @@ jobs:
       
       - name: fuzzersum
         run: |
+          apk update && apk add sudo
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
           sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer.log/db_map_fuzzer.log"
           chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer.log/db_map_fuzzer.log
