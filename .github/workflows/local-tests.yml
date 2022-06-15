@@ -33,18 +33,20 @@ jobs:
 
     steps:
     
+      - uses: actions/checkout@v3
+
       - name: pre
         run: |
           mkdir -p $GITHUB_WORKSPACE/out/
       
-#       - name: Download a Build Artifact
-#         uses: actions/download-artifact@v3.0.0
-#         with:
-#           name: db_fuzzer_log
-#           path: |
-#             ${{ github.workspace }}/out/db_fuzzer.log
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: db_fuzzer_log
+          path: |
+            ${{ github.workspace }}/out/db_fuzzer.log
       
-      - uses: actions/checkout@v3
+
 
       - name: Run a one-line script
         run: |
