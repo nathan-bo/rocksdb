@@ -162,16 +162,9 @@ jobs:
       
       - name: fuzzersum
         run: |
-          apk update && apk add sudo
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
-          sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_map_fuzzer.log/db_map_fuzzer.log"
-          chmod 777 $GITHUB_WORKSPACE/fuzz/db_map_fuzzer.log/db_map_fuzzer.log
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
-          sudo chown $USER:$USER "$GITHUB_WORKSPACE/fuzz/db_fuzzer.log/db_fuzzer.log"
-          chmod 777 $GITHUB_WORKSPACE/fuzz/db_fuzzer.log/db_fuzzer.log
           ls -alFh $GITHUB_WORKSPACE/out
-          ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer.log
-          ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log
+          ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer.log || echo ""
+          ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
           echo "~~~~ LOGS ~~~~~"
           tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo "skoot"
           tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer.log |grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo "skid"
