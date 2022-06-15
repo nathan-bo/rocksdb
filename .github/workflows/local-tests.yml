@@ -16,6 +16,7 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/out
           echo "Hello, world!" > $GITHUB_WORKSPACE/out/db_fuzzer.log
+          cat $GITHUB_WORKSPACE/out/db_fuzzer.log
           
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
@@ -34,7 +35,7 @@ jobs:
     
       - name: pre
         run: |
-          mkdir -p $GITHUB_WORKSPACE/out
+          mkdir -p $GITHUB_WORKSPACE/out/
       
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
