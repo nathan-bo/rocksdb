@@ -54,8 +54,5 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          ls -alFh $GITHUB_WORKSPACE
-          ls -alFh /__w/rocksdb/rocksdb/out/db_fuzzer.log/db_fuzzer_log
-          ls -alFh /__w/rocksdb/rocksdb/out/db_fuzzer.log || echo skoot
-          ls -alFh /__w/rocksdb/rocksdb/db_fuzzer.log || echo skid
+          find db_fuzzer.log
           
