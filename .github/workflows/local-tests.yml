@@ -52,3 +52,6 @@ jobs:
         run: |
           ls -alFh $GITHUB_WORKSPACE/
           ls -alFh $GITHUB_WORKSPACE/out/
+          ls $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
+          ls $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer.log || echo ""
+          cat $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer.log || echo ""
