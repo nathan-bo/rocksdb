@@ -164,9 +164,9 @@ jobs:
         run: |
           ls -alFh $GITHUB_WORKSPACE/out
           ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer.log || echo ""
-          ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer.log/db_map_fuzzer/artifact || echo ""
-          ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer/artifact || echo ""
+          ls -alFh $GITHUB_WORKSPACE/out/db_map_fuzzer.log/artifact || echo ""
+          ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log/artifact || echo ""
           ls -alFh $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
           echo "~~~~ LOGS ~~~~~"
-          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log/db_map_fuzzer/artifact/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo "skoot"
-          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer/artifact/db_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo "skid"
+          tail -20 $GITHUB_WORKSPACE/out/db_map_fuzzer.log/artifact/db_map_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo "skoot"
+          tail -20 $GITHUB_WORKSPACE/out/db_fuzzer.log/artifact/db_fuzzer.log | grep "==AddressSanitizer. Thread limit (4194304 threads) exceeded\. Dying\." || echo "skid"
