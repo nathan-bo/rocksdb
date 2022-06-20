@@ -14,7 +14,7 @@
 #define ROCKSDB_MAJOR 7
 #define ROCKSDB_MINOR 32
 #define ROCKSDB_PATCH 0
-#define ROCKSDB_PATCH "dev"
+#define ROCKSDB_BUILD "dev"
 
 
 // Do not use these. We made the mistake of declaring macros starting with
