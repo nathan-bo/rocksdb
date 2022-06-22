@@ -15,5 +15,5 @@ jobs:
       - name: Run a one-line script
         run: |
           if [ 0 == 0 ]; then
-            return 0
+            return 1
           fi
