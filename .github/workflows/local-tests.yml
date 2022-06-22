@@ -14,44 +14,6 @@ jobs:
 
       - name: Run a one-line script
         run: |
-          mkdir -p $GITHUB_WORKSPACE/out
-          echo "Hello, world!" > $GITHUB_WORKSPACE/out/db_fuzzer.log
-          cat $GITHUB_WORKSPACE/out/db_fuzzer.log
-          
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: db_fuzzer_log
-          path: ${{ github.workspace }}/out/db_fuzzer.log
-          
-          
-  download:
-    needs: [upload]
-    runs-on: ubuntu-latest
-    container:
-      image: alpine:3.14
-
-    steps:
-    
-      - uses: actions/checkout@v3
-
-      - name: pre
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/out/
-      
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.0
-        with:
-          name: db_fuzzer_log
-          path: |
-            ${{ github.workspace }}/out/db_fuzzer.log
-      
-
-
-      - name: Run a one-line script
-        run: |
-          ls -alFh $GITHUB_WORKSPACE/
-          ls -alFh $GITHUB_WORKSPACE/out/
-          ls $GITHUB_WORKSPACE/out/db_fuzzer.log || echo ""
-          ls $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer.log || echo ""
-          cat $GITHUB_WORKSPACE/out/db_fuzzer.log/db_fuzzer.log || echo ""
+          if [ 0 == 0 ]; then
+            return 0
+          fi
