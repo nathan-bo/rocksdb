@@ -54,6 +54,9 @@ jobs:
         df -h
         ls /etc/apk/world
         git config --global --add safe.directory $GITHUB_WORKSPACE
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git pull
         if [ -d "$GITHUB_WORKSPACE/build" ]; then
           echo >&2 "error: the build directory should not exist" && false NIK 
         fi
@@ -79,48 +82,52 @@ jobs:
         -DWITH_TESTS=1 -DWITH_ALL_TESTS=1 -DWITH_EXAMPLES=1
         ninja
         
-    - name: run fuzz-test
-      run: echo "~~~ Running Fuzz-Test ~~~"
-  
     - name: run unit-test
       run: echo "~~~ Running unit-test ~~~"
 
-    - name: run e2e-test 
+    - name: run perf-test 
       run: echo "~~~ Running e2e-test ~~~"
-      
+  
   Sanity:
-    needs: [Release]
-    uses: speedb-io/rocksdb/.github/workflows/sanity_check.yml@main
+    uses: speedb-io/speedb/.github/workflows/sanity_check.yml@main
 
+  Fuzz:
+    needs: [Release]
+    uses: speedb-io/speedb/.github/workflows/test_fuzz.yml@main
+      
 
   UpdateVer:
-    needs: [Sanity]
+    needs: [Sanity, Fuzz]
     runs-on: ubuntu-latest
     steps:
     
     - name: Update version.h
       run: |
-        env
-        echo ~~~~~
+        git config --global --add safe.directory $GITHUB_WORKSPACE
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git pull
         if [ $GITHUB_REF_NAME =~ "release/*)" ]; then
+          major=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
+          minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           patch=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
-          if [ $patch == 99 ]; then
-            new_patch=0
-            echo $new_patch
-          else
-            new_patch=$(echo $patch + 1 | bc)
-            echo $new_patch
-          fi
+          new_patch=$(echo $patch + 1 | bc)
           sed -i -e "s/#define ROCKSDB_PATCH.*/#define ROCKSDB_PATCH $new_patch/g" include/rocksdb/version.h
+          git commit -am "updated version.h version"
+          git push
+          git tag "v${{ env.major }}.${{ env.minor }}.$new_patch"
+          git push --tags
         elif [ $GITHUB_REF_NAME =~ "feature/*" ] | [ $GITHUB_REF_NAME =~ "main" ]; then
+          major=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MAJOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
+          minor=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_MINOR' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
           patch=$(cat $GITHUB_WORKSPACE/include/rocksdb/version.h | grep '#define ROCKSDB_PATCH' | grep -o '[^,]\+$' | tr ' ' '\n' | tail -n1)
-          if [ $patch == 99 ]; then
-            new_patch=0
-            echo $new_patch
-          else
-            new_patch=$(echo $patch + 1 | bc)
-            echo $new_patch
-          fi
+          new_patch=$(echo $patch + 1 | bc)
+          sed -i -e "s/#define ROCKSDB_PATCH.*/#define ROCKSDB_PATCH $new_patch/g" include/rocksdb/version.h
+          sed -i -e "s/#define ROCKSDB_BRANCH.*/#define ROCKSDB_BRANCH $GITHUB_REF_NAME/g" include/rocksdb/version.h
+          git commit -am "updated version.h version"
+          git push
+          git tag "v${{ env.major }}.${{ env.minor }}.$new_patch-$GITHUB_REF_NAME"
+          git push --tags
         fi
 
         
